@@ -1,2 +1,38 @@
 main :: IO ()
 main = putStrLn "Test suite not yet implemented"
+
+--{-# LANGUAGE TemplateHaskell #-}
+--module QuickCheck where
+--
+--{- IMPORTS -}
+--import TestsCode
+--
+--import Test.HUnit
+--import Test.QuickCheck
+--import Test.QuickCheck.All
+--
+--import Data.List
+--import Data.Char
+--
+--import System.IO
+--import System.Exit
+--
+--{- GENERATORS -}
+--
+--
+--{- TESTS -}
+--
+--
+--{- THIS CODE EXISTS TO AUTO RUN ALL prop_ TESTS -}
+--return [] -- this prevents GHC from showing some warnings
+--runTests :: IO Bool
+--runTests = $forAllProperties $
+--  quickCheckWithResult (stdArgs {maxSuccess = 1000})
+--
+--main :: IO ()
+--main = do
+--  -- add test runners into the array for each module
+--  good <- and <$> sequence [runTests {-, MyModule.runTests, etc-}]
+--  if good
+--     then exitSuccess
+--     else exitFailure
