@@ -1,3 +1,4 @@
 .stack-work/
-shoot-em-up-haskell.cabal
+.idea/
 *~
+/shoot-em-up-haskell.iml
