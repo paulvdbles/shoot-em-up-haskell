@@ -38,7 +38,7 @@ executables:
 
 tests:
   shoot-em-up-haskell-test:
-    main:                Spec.hs
+    main:                Tasty.hs
     source-dirs:         test
     ghc-options:
     - -threaded
