@@ -1,10 +1,10 @@
 module Main where
 
-import           Controller
-import           Model
-import           View
+import Controller
+import Model
+import View
 
-import           Graphics.Gloss.Interface.IO.Game
+import Graphics.Gloss.Interface.IO.Game
 
 main :: IO ()
 main =
