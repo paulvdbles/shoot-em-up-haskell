@@ -17,3 +17,36 @@ data GameState = GameState
 
 initialState :: GameState
 initialState = GameState ShowNothing 0
+
+-- example stuff above
+
+data Creature = Creature
+  { speed   :: Int
+  , health  :: HealthPoints
+  , weapons :: [Weapon]
+  }
+
+data Player = Player
+  { score    :: Int
+  , creature :: Creature
+  }
+
+newtype Enemy =
+  Enemy Creature
+
+data Item
+  = Weapon
+  | PowerUp { bonusHealth :: HealthPoints }
+
+data Weapon
+  = Pistol { damage :: Damage }
+  | Laser { damage :: Damage }
+  | Bazooka { damage :: Damage }
+
+newtype Damage =
+  Damage Int
+
+newtype HealthPoints =
+  HealthPoints Int
+
+

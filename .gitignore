@@ -2,3 +2,5 @@
 .idea/
 *~
 dist/
+/shoot-em-up-haskell.iml
+out/
