@@ -49,4 +49,14 @@ newtype Damage =
 newtype HealthPoints =
   HealthPoints Int
 
+data Placeable = PlaceableCreature Creature | PlaceableItem Item
+
+data Coordinates = Coordinates
+  { x    :: Int
+  , y    :: Int
+  }
+
+newtype Spawn = Spawn (Placeable, Coordinates)
+
+newtype Level = Level [Spawn]
 
