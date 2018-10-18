@@ -39,10 +39,10 @@ data Enemy = Enemy
   , evilSpaceship   :: Spaceship
   }
 
-data SpaceJunk = SpaceJunk
+data Obstacle = Obstacle
   { bonusPoints     :: ScorePoints
-  , junkCollisionDamage :: DamagePoints
-  , junkHealth      :: HealthPoints
+  , obstacleCollisionDamage :: DamagePoints
+  , obstacleHealth      :: HealthPoints
   }
 
 data Item
@@ -64,10 +64,20 @@ newtype HealthPoints =
 newtype ScorePoints =
   ScorePoints Int
 
+newtype Seconds =
+  Seconds Int
+
+data World = World
+  { player    :: Player
+  , enemies   :: [Enemy]
+  , obstacles :: [Obstacle]
+  , level     :: Level
+  }
+
 data Placeable
   = PlaceableCreature Spaceship
   | PlaceableItem Item
-  | PlaceableSpaceJunk SpaceJunk
+  | PlaceableSpaceObstacles Obstacle
 
 data Coordinates = Coordinates
   { x :: Int
@@ -80,12 +90,3 @@ newtype Spawn =
 newtype Level =
   Level [Spawn]
 
-data World = World
-  { player    :: Player
-  , enemies   :: [Enemy]
-  , spaceJunk :: [SpaceJunk]
-  , level     :: Level
-  }
-
-newtype Seconds =
-  Seconds Int
