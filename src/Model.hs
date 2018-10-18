@@ -74,19 +74,21 @@ data World = World
   , level     :: Level
   }
 
+newtype Level =
+  Level [Spawn]
+
+newtype Spawn =
+  Spawn (Placeable, Coordinates)
+
 data Placeable
   = PlaceableCreature Spaceship
   | PlaceableItem Item
-  | PlaceableSpaceObstacles Obstacle
+  | PlaceableObstacle Obstacle
 
 data Coordinates = Coordinates
   { x :: Int
   , y :: Int
   }
 
-newtype Spawn =
-  Spawn (Placeable, Coordinates)
 
-newtype Level =
-  Level [Spawn]
 
