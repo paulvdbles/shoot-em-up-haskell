@@ -34,13 +34,15 @@ data Player = Player
   }
 
 data Enemy = Enemy
-  { bounty        :: ScorePoints
-  , evilSpaceship :: Spaceship
+  { bounty          :: ScorePoints
+  , enemyCollisionDamage :: DamagePoints
+  , evilSpaceship   :: Spaceship
   }
 
 data SpaceJunk = SpaceJunk
-  { bonusPoints :: ScorePoints
-  , junkHealth  :: HealthPoints
+  { bonusPoints     :: ScorePoints
+  , junkCollisionDamage :: DamagePoints
+  , junkHealth      :: HealthPoints
   }
 
 data Item
