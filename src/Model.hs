@@ -20,34 +20,42 @@ initialState = GameState ShowNothing 0
 
 -- example stuff above
 data Spaceship = Spaceship
-  { speed    :: Int
-  , health   :: HealthPoints
-  , weapons  :: [Weapon]
-  , location :: Coordinates
+  { speed   :: Int
+  , health  :: HealthPoints
+  , weapons :: [Weapon]
   }
 
 data Player = Player
-  { spaceship :: Spaceship
-  , score     :: ScorePoints
-  , combo     :: Int
-  , comboTime :: Seconds
+  { playerSpaceship :: Spaceship
+  , score           :: ScorePoints
+  , comboMultiplier :: Int
+  , comboTime       :: Seconds
+  , location        :: Coordinate
   }
 
 data Enemy = Enemy
-  { bounty          :: ScorePoints
+  { bounty               :: ScorePoints
   , enemyCollisionDamage :: DamagePoints
-  , evilSpaceship   :: Spaceship
+  , enemySpaceship       :: Spaceship
+  -- in een aparte location data type
+  , enemyLocation        :: Coordinate
+  , enemyDestination     :: Coordinate
   }
 
 data Obstacle = Obstacle
-  { bonusPoints     :: ScorePoints
+  { bonusPoints             :: ScorePoints
   , obstacleCollisionDamage :: DamagePoints
-  , obstacleHealth      :: HealthPoints
+  , obstacleHealth          :: HealthPoints
+  -- in een aparte location data type
+  , obstacleLocation        :: Coordinate
+  , obstacleDestination     :: Coordinate
   }
 
 data Item
-  = WeaponItem Weapon
-  | PowerUp { bonusHealth :: HealthPoints }
+  = WeaponItem { weapon             :: Weapon
+               , weaponItemLocation :: Coordinate }
+  | PowerUp { bonusHealth     :: HealthPoints
+            , powerUpLocation :: Coordinate }
 
 data Weapon
   = Pistol { damage :: DamagePoints }
@@ -72,23 +80,23 @@ data World = World
   , enemies   :: [Enemy]
   , obstacles :: [Obstacle]
   , level     :: Level
+  -- camera
   }
+  -- renderable dingen in hun eigen renderable type class
+  -- location dingen in hun eigen location type class
 
 newtype Level =
   Level [Spawn]
 
 newtype Spawn =
-  Spawn (Placeable, Coordinates)
+  Spawn (Placeable, Coordinate)
 
 data Placeable
-  = PlaceableCreature Spaceship
+  = PlaceableSpaceship Spaceship
   | PlaceableItem Item
   | PlaceableObstacle Obstacle
 
-data Coordinates = Coordinates
+data Coordinate = Coordinate
   { x :: Int
   , y :: Int
   }
-
-
-
