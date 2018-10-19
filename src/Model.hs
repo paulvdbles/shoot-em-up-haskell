@@ -1,6 +1,10 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 -- | This module contains the data types
 --   which represent the state of the game
 module Model where
+
+import           Graphics.Gloss
 
 data InfoToShow
   = ShowNothing
@@ -19,49 +23,56 @@ initialState :: GameState
 initialState = GameState ShowNothing 0
 
 -- example stuff above
+
 data Spaceship = Spaceship
-  { speed   :: Int
-  , health  :: HealthPoints
-  , weapons :: [Weapon]
-  }
+  { speed                        :: Int
+  , health                       :: HealthPoints
+  , weapons                      :: [Weapon]
+  , spaceshipPositionInformation :: PositionInformation
+  } deriving (Renderable)
 
 data Player = Player
   { playerSpaceship :: Spaceship
   , score           :: ScorePoints
   , comboMultiplier :: Int
   , comboTime       :: Seconds
-  , location        :: Coordinate
   }
 
 data Enemy = Enemy
   { bounty               :: ScorePoints
   , enemyCollisionDamage :: DamagePoints
   , enemySpaceship       :: Spaceship
-  -- in een aparte location data type
-  , enemyLocation        :: Coordinate
-  , enemyDestination     :: Coordinate
   }
 
 data Obstacle = Obstacle
-  { bonusPoints             :: ScorePoints
-  , obstacleCollisionDamage :: DamagePoints
-  , obstacleHealth          :: HealthPoints
-  -- in een aparte location data type
-  , obstacleLocation        :: Coordinate
-  , obstacleDestination     :: Coordinate
-  }
+  { bonusPoints                 :: ScorePoints
+  , obstacleCollisionDamage     :: DamagePoints
+  , obstacleHealth              :: HealthPoints
+  , obstaclePositionInformation :: PositionInformation
+  } deriving (Renderable)
 
 data Item
   = WeaponItem { weapon             :: Weapon
                , weaponItemLocation :: Coordinate }
   | PowerUp { bonusHealth     :: HealthPoints
             , powerUpLocation :: Coordinate }
+  deriving (Renderable)
 
 data Weapon
-  = Pistol { damage :: DamagePoints }
-  | Laser { damage :: DamagePoints }
-  | Bazooka { damage     :: DamagePoints
+  = Pistol { bullet :: Bullet }
+  | Laser { bullet :: Bullet }
+  | Bazooka { bullet     :: Bullet
             , reloadTime :: Int }
+
+data Bullet = Bullet
+  { damage                    :: DamagePoints
+  , bulletPositionInformation :: PositionInformation
+  } deriving (Renderable)
+
+data PositionInformation = PositionInformation
+  { location    :: Coordinate
+  , destination :: Coordinate
+  }
 
 newtype DamagePoints =
   DamagePoints Int
@@ -80,10 +91,15 @@ data World = World
   , enemies   :: [Enemy]
   , obstacles :: [Obstacle]
   , level     :: Level
-  -- camera
+  , camera    :: Camera
   }
-  -- renderable dingen in hun eigen renderable type class
-  -- location dingen in hun eigen location type class
+
+data Camera = Camera
+  { upperLeftCorner  :: Coordinate
+  , upperRightCorner :: Coordinate
+  , lowerLeftCorner  :: Coordinate
+  , lowerRightCorner :: Coordinate
+  }
 
 newtype Level =
   Level [Spawn]
@@ -100,3 +116,9 @@ data Coordinate = Coordinate
   { x :: Int
   , y :: Int
   }
+
+class Renderable a where
+  render :: a -> Picture
+
+class Locatable a where
+  nextLocation :: a -> a
