@@ -36,13 +36,13 @@ data Player = Player
   , score           :: ScorePoints
   , comboMultiplier :: Int
   , comboTime       :: Seconds
-  }
+  } deriving (Renderable)
 
 data Enemy = Enemy
   { bounty               :: ScorePoints
   , enemyCollisionDamage :: DamagePoints
   , enemySpaceship       :: Spaceship
-  }
+  } deriving (Renderable)
 
 data Obstacle = Obstacle
   { bonusPoints                 :: ScorePoints
@@ -76,15 +76,19 @@ data PositionInformation = PositionInformation
 
 newtype DamagePoints =
   DamagePoints Int
+    deriving (Eq)
 
 newtype HealthPoints =
   HealthPoints Int
+    deriving (Eq)
 
 newtype ScorePoints =
   ScorePoints Int
+    deriving (Eq)
 
 newtype Seconds =
   Seconds Int
+    deriving (Eq)
 
 data World = World
   { player    :: Player
