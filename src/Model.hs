@@ -4,25 +4,20 @@
 --   which represent the state of the game
 module Model where
 
-import           Graphics.Gloss
-
-data InfoToShow
-  = ShowNothing
-  | ShowANumber Int
-  | ShowAChar Char
-
-nO_SECS_BETWEEN_CYCLES :: Float
-nO_SECS_BETWEEN_CYCLES = 5
-
-data GameState = GameState
-  { infoToShow  :: InfoToShow
-  , elapsedTime :: Float
-  }
-
-initialState :: GameState
-initialState = GameState ShowNothing 0
-
 -- example stuff above
+
+mockPosition = PositionInformation (Coordinate 0 0) (Coordinate 0 0)
+
+pistol = Pistol (Bullet (DamagePoints 10) mockPosition)
+initialSpaceship = Spaceship 1 (HealthPoints 100) [pistol] mockPosition
+initialPlayer = Player initialSpaceship (ScorePoints 0) 0 (Seconds 0)
+
+emptyLevel = Level []
+
+mockCamera = Camera (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0)
+
+initialState :: World
+initialState = World initialPlayer [] [] emptyLevel mockCamera
 
 data Spaceship = Spaceship
   { speed                        :: Int
@@ -122,7 +117,7 @@ data Coordinate = Coordinate
   }
 
 class Renderable a where
-  render :: a -> Picture
+  render :: a -> a
 
 class Locatable a where
   nextLocation :: a -> a
