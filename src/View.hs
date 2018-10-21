@@ -10,6 +10,9 @@ view :: World -> IO Picture
 view world = loadSprite
 
 loadSprite :: IO Picture
-loadSprite = do
-  Just picture <- loadJuicyPNG "sprites/player.png"
-  return picture
+loadSprite =
+  loadJuicyPNG "sprites/player.png" >>=
+  (\picture ->
+     case picture of
+       Just picture -> return picture
+       Nothing -> undefined)
