@@ -1,5 +1,8 @@
 -- | This module defines how to turn
 --   the game state into a picture
+
+{-# LANGUAGE LambdaCase #-}
+
 module View where
 
 import           Graphics.Gloss
@@ -11,8 +14,6 @@ view world = loadSprite
 
 loadSprite :: IO Picture
 loadSprite =
-  loadJuicyPNG "sprites/player.png" >>=
-  (\picture ->
-     case picture of
-       Just picture -> return picture
-       Nothing -> undefined)
+  loadJuicyPNG "sprites/player.png" >>= \case
+    Just picture -> return picture
+    Nothing -> undefined
