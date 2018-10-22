@@ -9,11 +9,8 @@ import           Graphics.Gloss
 import           Graphics.Gloss.Juicy
 import           Model
 
-view :: World -> IO Picture
-view world = loadSprite
+-- should update view
 
-loadSprite :: IO Picture
-loadSprite =
-  loadJuicyPNG "sprites/player.png" >>= \case
-    Just picture -> return picture
-    Nothing -> undefined
+view :: World -> IO Picture
+view world = render initialPlayer
+

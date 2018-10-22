@@ -4,7 +4,8 @@
 --   which represent the state of the game
 module Model where
 
--- example stuff above
+import           Graphics.Gloss
+import           Graphics.Gloss.Juicy
 
 mockPosition = PositionInformation (Coordinate 0 0) (Coordinate 0 0)
 
@@ -31,20 +32,20 @@ data Player = Player
   , score           :: ScorePoints
   , comboMultiplier :: Int
   , comboTime       :: Seconds
-  } deriving (Renderable)
+  }
 
 data Enemy = Enemy
   { bounty               :: ScorePoints
   , enemyCollisionDamage :: DamagePoints
   , enemySpaceship       :: Spaceship
-  } deriving (Renderable)
+  }
 
 data Obstacle = Obstacle
   { bonusPoints                 :: ScorePoints
   , obstacleCollisionDamage     :: DamagePoints
   , obstacleHealth              :: HealthPoints
   , obstaclePositionInformation :: PositionInformation
-  } deriving (Renderable)
+  }
 
 data Item
   = WeaponItem { weapon             :: Weapon
@@ -116,8 +117,35 @@ data Coordinate = Coordinate
   , y :: Int
   }
 
-class Renderable a where
-  render :: a -> a
-
 class Locatable a where
-  nextLocation :: a -> a
+    nextLocation :: a -> a
+
+class Renderable a where
+    render :: a -> IO Picture
+
+instance Renderable Player
+    where render p = do
+                     picture <- loadJuicyPNG "sprites/player.png"
+                     case picture of
+                      Just picture -> return picture
+                      Nothing -> undefined
+
+instance Renderable Enemy
+    where render p = do
+                     picture <- loadJuicyPNG "sprites/enemy.png"
+                     case picture of
+                      Just picture -> return picture
+                      Nothing -> undefined
+
+instance Renderable Obstacle
+    where render p = do
+                     picture <- loadJuicyPNG "sprites/obstacle.png"
+                     case picture of
+                      Just picture -> return picture
+                      Nothing -> undefined
+
+
+
+
+
+
