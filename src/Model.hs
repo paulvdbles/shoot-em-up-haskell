@@ -10,7 +10,9 @@ import           Graphics.Gloss.Juicy
 mockPosition = PositionInformation (Coordinate 0 0) (Coordinate 0 0)
 
 pistol = Pistol (Bullet (DamagePoints 10) mockPosition)
+
 initialSpaceship = Spaceship 1 (HealthPoints 100) [pistol] mockPosition
+
 initialPlayer = Player initialSpaceship (ScorePoints 0) 0 (Seconds 0)
 
 emptyLevel = Level []
@@ -25,7 +27,7 @@ data Spaceship = Spaceship
   , health                       :: HealthPoints
   , weapons                      :: [Weapon]
   , spaceshipPositionInformation :: PositionInformation
-  } deriving (Renderable)
+  }
 
 data Player = Player
   { playerSpaceship :: Spaceship
@@ -52,7 +54,7 @@ data Item
                , weaponItemLocation :: Coordinate }
   | PowerUp { bonusHealth     :: HealthPoints
             , powerUpLocation :: Coordinate }
-  deriving (Renderable)
+
 
 data Weapon
   = Pistol { bullet :: Bullet }
@@ -63,7 +65,7 @@ data Weapon
 data Bullet = Bullet
   { damage                    :: DamagePoints
   , bulletPositionInformation :: PositionInformation
-  } deriving (Renderable)
+  }
 
 data PositionInformation = PositionInformation
   { location    :: Coordinate
@@ -72,19 +74,19 @@ data PositionInformation = PositionInformation
 
 newtype DamagePoints =
   DamagePoints Int
-    deriving (Eq)
+  deriving (Eq)
 
 newtype HealthPoints =
   HealthPoints Int
-    deriving (Eq)
+  deriving (Eq)
 
 newtype ScorePoints =
   ScorePoints Int
-    deriving (Eq)
+  deriving (Eq)
 
 newtype Seconds =
   Seconds Int
-    deriving (Eq)
+  deriving (Eq)
 
 data World = World
   { player    :: Player
@@ -118,34 +120,12 @@ data Coordinate = Coordinate
   }
 
 class Locatable a where
-    nextLocation :: a -> a
+  nextLocation :: a -> a
 
-class Renderable a where
-    render :: a -> IO Picture
-
-instance Renderable Player
-    where render p = do
-                     picture <- loadJuicyPNG "sprites/player.png"
-                     case picture of
-                      Just picture -> return picture
-                      Nothing -> undefined
-
-instance Renderable Enemy
-    where render p = do
-                     picture <- loadJuicyPNG "sprites/enemy.png"
-                     case picture of
-                      Just picture -> return picture
-                      Nothing -> undefined
-
-instance Renderable Obstacle
-    where render p = do
-                     picture <- loadJuicyPNG "sprites/obstacle.png"
-                     case picture of
-                      Just picture -> return picture
-                      Nothing -> undefined
-
-
-
-
+data Images = Images
+  { playerImage         :: Picture
+  , enemyImage :: Picture
+  , obstacleImage :: Picture
+  }
 
 
