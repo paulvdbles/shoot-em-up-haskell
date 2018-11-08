@@ -9,9 +9,9 @@ import           Graphics.Gloss.Interface.IO.Game
 import           System.Random
 
 -- | Handle one iteration of the game
-step :: Float -> World -> World
-step secs world = world
+step :: Float -> World -> IO World
+step secs world = return world
 
 -- | Handle user input
-input :: Event -> World -> World
-input e world = world
+input :: Event -> World -> IO World
+input e world = return world
