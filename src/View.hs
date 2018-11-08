@@ -6,10 +6,14 @@ import           Graphics.Gloss.Juicy
 import           Model
 
 view :: World -> IO Picture
-view world = return (pictures [drawPlayer world])
+view World {player = player} = return (pictures [drawPlayer player])
 
-drawPlayer :: World -> Picture
-drawPlayer world = translate playerXPosition playerYPosition $ color (light blue) $ rectangleSolid 50 80
+drawPlayer :: Player -> Picture
+drawPlayer Player {playerSpaceship = spaceship} =
+  translate playerXPosition playerYPosition $ color (light blue) $ rectangleSolid 50 80
   where
-    playerXPosition = 0
-    playerYPosition = -200
+    playerPosition = getLocation (getSpaceshipPosition spaceship)
+    playerXPosition = getXCoordinate playerPosition
+    playerYPosition = getYCoordinate playerPosition
+
+

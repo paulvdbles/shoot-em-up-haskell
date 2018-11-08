@@ -55,7 +55,6 @@ data Item
   | PowerUp { bonusHealth     :: HealthPoints
             , powerUpLocation :: Coordinate }
 
-
 data Weapon
   = Pistol { bullet :: Bullet }
   | Laser { bullet :: Bullet }
@@ -115,17 +114,40 @@ data Placeable
   | PlaceableObstacle Obstacle
 
 data Coordinate = Coordinate
-  { x :: Int
-  , y :: Int
+  { x :: Float
+  , y :: Float
   }
 
 class Locatable a where
   nextLocation :: a -> a
 
 data Images = Images
-  { playerImage         :: Picture
-  , enemyImage :: Picture
+  { playerImage   :: Picture
+  , enemyImage    :: Picture
   , obstacleImage :: Picture
   }
 
+getSpaceshipPosition :: Spaceship -> PositionInformation
+getSpaceshipPosition Spaceship {spaceshipPositionInformation = position} = position
 
+getLocation :: PositionInformation -> Coordinate
+getLocation PositionInformation {location = location} = location
+
+getXCoordinate :: Coordinate -> Float
+getXCoordinate Coordinate {x = x} = x
+
+getYCoordinate :: Coordinate -> Float
+getYCoordinate Coordinate {y = y} = y
+
+updateLocation :: PositionInformation -> Coordinate -> PositionInformation
+updateLocation PositionInformation {destination = destination} coordinate =
+  PositionInformation {location = coordinate, destination = destination}
+
+updateSpaceshipPositionInformation :: Spaceship -> PositionInformation -> Spaceship
+updateSpaceshipPositionInformation spaceship position = Spaceship {spaceshipPositionInformation = position}
+
+updatePlayersSpaceship :: Player -> Spaceship -> Player
+updatePlayersSpaceship player spaceship = Player {playerSpaceship = spaceship}
+
+updateWorldsPlayer :: World -> Player -> World
+updateWorldsPlayer world player = World {player = player}
