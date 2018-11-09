@@ -19,8 +19,11 @@ emptyLevel = Level []
 
 mockCamera = Camera (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0)
 
+initialKeyboard :: Keyboard
+initialKeyboard = Keyboard False False False False False
+
 initialState :: World
-initialState = World initialPlayer [] [] emptyLevel mockCamera
+initialState = World initialPlayer [] [] emptyLevel mockCamera initialKeyboard
 
 data Spaceship = Spaceship
   { speed                        :: Int
@@ -93,6 +96,15 @@ data World = World
   , obstacles :: [Obstacle]
   , level     :: Level
   , camera    :: Camera
+  , keyboard  :: Keyboard
+  }
+
+data Keyboard = Keyboard
+  { upKey    :: Bool
+  , downKey  :: Bool
+  , leftKey  :: Bool
+  , rightKey :: Bool
+  , shootKey :: Bool
   }
 
 data Camera = Camera
@@ -144,10 +156,13 @@ updateLocation PositionInformation {destination = destination} coordinate =
   PositionInformation {location = coordinate, destination = destination}
 
 updateSpaceshipPositionInformation :: Spaceship -> PositionInformation -> Spaceship
-updateSpaceshipPositionInformation spaceship position = Spaceship {spaceshipPositionInformation = position}
+updateSpaceshipPositionInformation spaceship position = spaceship {spaceshipPositionInformation = position}
 
 updatePlayersSpaceship :: Player -> Spaceship -> Player
-updatePlayersSpaceship player spaceship = Player {playerSpaceship = spaceship}
+updatePlayersSpaceship player spaceship = player {playerSpaceship = spaceship}
 
 updateWorldsPlayer :: World -> Player -> World
-updateWorldsPlayer world player = World {player = player}
+updateWorldsPlayer world player = world {player = player}
+
+getPlayer :: World -> Player
+getPlayer World{player = player} = player
