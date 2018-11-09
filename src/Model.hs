@@ -138,18 +138,6 @@ data Images = Images
   , obstacleImage :: Picture
   }
 
-getSpaceshipPosition :: Spaceship -> PositionInformation
-getSpaceshipPosition Spaceship {spaceshipPositionInformation = position} = position
-
-getLocation :: PositionInformation -> Coordinate
-getLocation PositionInformation {location = location} = location
-
-getXCoordinate :: Coordinate -> Float
-getXCoordinate Coordinate {x = x} = x
-
-getYCoordinate :: Coordinate -> Float
-getYCoordinate Coordinate {y = y} = y
-
 updateLocation :: PositionInformation -> Coordinate -> PositionInformation
 updateLocation PositionInformation {destination = destination} coordinate =
   PositionInformation {location = coordinate, destination = destination}
@@ -162,6 +150,3 @@ updatePlayersSpaceship player spaceship = player {playerSpaceship = spaceship}
 
 updateWorldsPlayer :: World -> Player -> World
 updateWorldsPlayer world player = world {player = player}
-
-getPlayer :: World -> Player
-getPlayer World{player = player} = player

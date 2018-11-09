@@ -15,12 +15,10 @@ step secs world = return (checkIfPlayerShouldBeMoved world)
 checkIfPlayerShouldBeMoved :: World -> World
 checkIfPlayerShouldBeMoved world =
   case world of
-    upKeyPressed -> world {player = movePlayerUp player}
+    upKeyPressed -> world {player = movePlayerUp (player world)}
 --    downKeyPressed -> undefined
 --    leftKeyPressed -> undefined
 --    rightKeyPressed -> undefined
-  where
-    player = getPlayer world
 
 upKeyPressed :: World -> Bool
 upKeyPressed World{keyboard = keyboard} = upKey keyboard
@@ -53,9 +51,9 @@ movePlayerUp player =
   player {playerSpaceship = updateSpaceshipPositionInformation playerSpaceship' updatedPositionInformation}
   where
     playerSpaceship' = playerSpaceship player
-    positionInformation = getSpaceshipPosition playerSpaceship'
-    playerLocation = getLocation positionInformation
-    oldX = getXCoordinate playerLocation
-    oldY = getYCoordinate playerLocation
+    positionInformation = spaceshipPositionInformation playerSpaceship'
+    playerLocation = location positionInformation
+    oldX = x playerLocation
+    oldY = y playerLocation
     newCoordinates = Coordinate oldX (oldY + 1)
     updatedPositionInformation = updateLocation positionInformation newCoordinates

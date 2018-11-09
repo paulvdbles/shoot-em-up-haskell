@@ -11,8 +11,8 @@ drawPlayer :: Player -> Picture
 drawPlayer Player {playerSpaceship = spaceship} =
   translate playerXPosition playerYPosition $ color (light blue) $ rectangleSolid 50 80
   where
-    playerPosition = getLocation (getSpaceshipPosition spaceship)
-    playerXPosition = getXCoordinate playerPosition
-    playerYPosition = getYCoordinate playerPosition
+    playerPosition = location (spaceshipPositionInformation spaceship)
+    playerXPosition = x playerPosition
+    playerYPosition = y playerPosition
 
 
