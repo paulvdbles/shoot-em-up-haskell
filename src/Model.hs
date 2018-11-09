@@ -1,7 +1,9 @@
+{-# LANGUAGE DeriveGeneric #-}
 -- | This module contains the data types
 --   which represent the state of the game
 module Model where
 
+import           GHC.Generics
 import           Graphics.Gloss
 
 mockPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
@@ -136,6 +138,15 @@ data Images = Images
   , enemyImage    :: Picture
   , obstacleImage :: Picture
   }
+
+{- JSON STUFF -}
+newtype Scores = Scores { scores :: [Score] } deriving (Show)
+
+data Score = Score
+  { playername :: String
+    , playerscore :: Int
+  } deriving (Generic, Show)
+{- END JSON STUFF -}
 
 updateLocation :: PositionInformation -> Coordinate -> PositionInformation
 updateLocation PositionInformation {destination = destination} coordinate =
