@@ -144,9 +144,6 @@ data Images = Images
 
 newtype Scores = Scores { unScore :: [Score] } deriving (Show)
 {- JSON STUFF -}
-newtype Scores = Scores
-  { scores :: [Score]
-  } deriving (Show)
 
 data Score = Score
   { playername  :: String
