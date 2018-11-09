@@ -1,5 +1,3 @@
-{-# LANGUAGE DeriveAnyClass #-}
-
 -- | This module contains the data types
 --   which represent the state of the game
 module Model where
@@ -104,7 +102,7 @@ data Keyboard = Keyboard
   , leftKey  :: Bool
   , rightKey :: Bool
   , shootKey :: Bool
-  }
+  }  deriving (Show)
 
 data Camera = Camera
   { upperLeftCorner  :: Coordinate
