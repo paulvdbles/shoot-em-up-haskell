@@ -13,7 +13,7 @@ import           System.Random
 
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
-step secs world = return (checkIfPlayerShouldBeMoved (checkIfPlayerShouldShoot world))
+step secs world = return (updateBullets (checkIfPlayerShouldBeMoved (checkIfPlayerShouldShoot world)))
 
 -- | Handle user input
 input :: Event -> World -> IO World
@@ -38,6 +38,23 @@ checkIfPlayerShouldBeMoved world
   | leftKey (keyboard world) = world {player = movePlayer (player world) (calculateLeftCoordinate (player world))}
   | rightKey (keyboard world) = world {player = movePlayer (player world) (calculateRightCoordinate (player world))}
   | otherwise = world
+
+updateBullets :: World -> World
+updateBullets world = world {bullets = map moveBulletToDestination (removeOldBullets (bullets world))}
+
+removeOldBullets :: [Bullet] -> [Bullet]
+removeOldBullets = filter bulletShouldBeKept
+
+bulletShouldBeKept :: Bullet -> Bool
+bulletShouldBeKept bullet = y (location (bulletPositionInformation bullet)) <= y (destination (bulletPositionInformation bullet))
+
+moveBulletToDestination :: Bullet -> Bullet
+moveBulletToDestination bullet = bullet {bulletPositionInformation = updatedPositionInformation}
+  where
+    currentLocation = location (bulletPositionInformation bullet)
+    newLocation = Coordinate (x currentLocation) (y currentLocation + 10)
+    destination' = destination (bulletPositionInformation bullet)
+    updatedPositionInformation = PositionInformation newLocation destination'
 
 calculateUpCoordinate :: Player -> Coordinate
 calculateUpCoordinate player = calculateCoordinate player 0 10
@@ -91,15 +108,17 @@ loadJSON :: IO (Either String [Score])
 loadJSON = eitherDecode <$> getJSON
 
 shootBullet :: World -> World
-shootBullet world = world {bullets = bullet'{bulletPositionInformation = spawnLocation} : bullets'}
+shootBullet world = world {bullets = bullet' {bulletPositionInformation = spawnLocation} : bullets'}
   where
     playerSpaceship' = playerSpaceship (player world)
     weapon = head (filter active (weapons playerSpaceship'))
     bullet' = bullet weapon
     bullets' = bullets world
-    spawnLocation = PositionInformation (determineBulletsSpawnLocation playerSpaceship') (Coordinate 0 (-200))
+    spawnLocation = determineBulletsPositionInformation playerSpaceship'
 
-determineBulletsSpawnLocation :: Spaceship -> Coordinate
-determineBulletsSpawnLocation playerSpaceship = Coordinate (x playerLocation) (y playerLocation + 10)
+determineBulletsPositionInformation :: Spaceship -> PositionInformation
+determineBulletsPositionInformation playerSpaceship = PositionInformation location' destination
   where
+    location' = Coordinate (x playerLocation) (y playerLocation + 55)
+    destination = Coordinate (x playerLocation) (y playerLocation + 1250) -- Add +1250 so the bullet's destination is outside the screen
     playerLocation = location (spaceshipPositionInformation playerSpaceship)
