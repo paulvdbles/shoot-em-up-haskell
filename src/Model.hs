@@ -5,7 +5,6 @@
 module Model where
 
 import           Graphics.Gloss
-import           Graphics.Gloss.Juicy
 
 mockPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
 

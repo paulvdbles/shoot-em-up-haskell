@@ -2,7 +2,6 @@ module View where
 
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.Pure.Game
-import           Graphics.Gloss.Juicy
 import           Model
 
 view :: World -> IO Picture
