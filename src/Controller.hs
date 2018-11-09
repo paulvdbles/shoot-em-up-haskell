@@ -91,19 +91,15 @@ loadJSON :: IO (Either String [Score])
 loadJSON = eitherDecode <$> getJSON
 
 shootBullet :: World -> World
-shootBullet world = world {bullets = bullet' : bullets'}
+shootBullet world = world {bullets = bullet'{bulletPositionInformation = spawnLocation} : bullets'}
   where
     playerSpaceship' = playerSpaceship (player world)
     weapon = head (filter active (weapons playerSpaceship'))
     bullet' = bullet weapon
     bullets' = bullets world
-    spawnLocation = determineBulletsSpawnLocation playerSpaceship'
+    spawnLocation = PositionInformation (determineBulletsSpawnLocation playerSpaceship') (Coordinate 0 (-200))
 
 determineBulletsSpawnLocation :: Spaceship -> Coordinate
 determineBulletsSpawnLocation playerSpaceship = Coordinate (x playerLocation) (y playerLocation + 10)
   where
     playerLocation = location (spaceshipPositionInformation playerSpaceship)
-
-
-
-
