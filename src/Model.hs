@@ -1,5 +1,4 @@
 {-# LANGUAGE DeriveGeneric #-}
-
 -- | This module contains the data types
 --   which represent the state of the game
 module Model where
@@ -143,6 +142,7 @@ data Images = Images
   , obstacleImage :: Picture
   }
 
+newtype Scores = Scores { unScore :: [Score] } deriving (Show)
 {- JSON STUFF -}
 newtype Scores = Scores
   { scores :: [Score]
@@ -152,6 +152,7 @@ data Score = Score
   { playername  :: String
   , playerscore :: Int
   } deriving (Generic, Show)
+
 
 {- END JSON STUFF -}
 updateLocation :: PositionInformation -> Coordinate -> PositionInformation
