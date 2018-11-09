@@ -8,7 +8,7 @@ import           Graphics.Gloss
 
 mockPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
 
-pistol = Pistol (Bullet (DamagePoints 10) mockPosition) True
+pistol = Pistol (Bullet (DamagePoints 10) mockPosition) True 0
 
 initialSpaceship = Spaceship 1 (HealthPoints 100) [pistol] mockPosition
 
@@ -22,7 +22,7 @@ initialKeyboard :: Keyboard
 initialKeyboard = Keyboard False False False False False
 
 initialState :: World
-initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard
+initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard 0
 
 data Spaceship = Spaceship
   { speed                        :: Int
@@ -59,12 +59,15 @@ data Item
 
 data Weapon
   = Pistol { bullet :: Bullet
-           , active :: Bool }
+           , active :: Bool
+           , lastShotAtFrame :: Int}
   | Laser { bullet :: Bullet
-          , active :: Bool }
+          , active :: Bool
+          , lastShotAtFrame :: Int}
   | Bazooka { bullet     :: Bullet
             , reloadTime :: Int
-            , active     :: Bool }
+            , active     :: Bool
+            , lastShotAtFrame :: Int}
 
 data Bullet = Bullet
   { damage                    :: DamagePoints
@@ -100,6 +103,7 @@ data World = World
   , level     :: Level
   , camera    :: Camera
   , keyboard  :: Keyboard
+  , iteration :: Int
   }
 
 data Keyboard = Keyboard

@@ -13,7 +13,10 @@ import           System.Random
 
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
-step secs world = return (updateBullets (checkIfPlayerShouldBeMoved (checkIfPlayerShouldShoot world)))
+step secs world = return $ updateBullets $ checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ updateIteration world
+
+updateIteration :: World -> World
+updateIteration world = world {iteration = iteration world + 1}
 
 -- | Handle user input
 input :: Event -> World -> IO World
@@ -46,7 +49,8 @@ removeOldBullets :: [Bullet] -> [Bullet]
 removeOldBullets = filter bulletShouldBeKept
 
 bulletShouldBeKept :: Bullet -> Bool
-bulletShouldBeKept bullet = y (location (bulletPositionInformation bullet)) <= y (destination (bulletPositionInformation bullet))
+bulletShouldBeKept bullet =
+  y (location (bulletPositionInformation bullet)) <= y (destination (bulletPositionInformation bullet))
 
 moveBulletToDestination :: Bullet -> Bullet
 moveBulletToDestination bullet = bullet {bulletPositionInformation = updatedPositionInformation}
