@@ -5,7 +5,7 @@ module Controller where
 import           Model
 
 import           Data.Aeson
-import qualified Data.ByteString.Lazy as BS
+import qualified Data.ByteString.Lazy             as BS
 
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.IO.Game
@@ -13,19 +13,7 @@ import           System.Random
 
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
-step secs world = return (checkIfPlayerShouldBeMoved world)
-
-checkIfPlayerShouldBeMoved :: World -> World
-checkIfPlayerShouldBeMoved world
-  | upKey (keyboard world) = world {player = movePlayer (player world) (calculateUpCoordinate (player world))}
-  | downKey (keyboard world) = world {player = movePlayer (player world) (calculateDownCoordinate (player world))}
-  | leftKey (keyboard world) = world {player = movePlayer (player world) (calculateLeftCoordinate (player world))}
-  | rightKey (keyboard world) =  world {player = movePlayer (player world) (calculateRightCoordinate (player world))}
-  | otherwise = world
-
-checkIfPlayerShouldShoot :: World -> World
-checkIfPlayerShouldShoot world
-  | shootKey (keyboard world) = undefined
+step secs world = return (checkIfPlayerShouldBeMoved (checkIfPlayerShouldShoot world))
 
 -- | Handle user input
 input :: Event -> World -> IO World
@@ -43,30 +31,32 @@ input event world =
     EventKey (Char 'z') Up _ _ -> return (world {keyboard = (keyboard world) {shootKey = False}})
     _ -> return world
 
+checkIfPlayerShouldBeMoved :: World -> World
+checkIfPlayerShouldBeMoved world
+  | upKey (keyboard world) = world {player = movePlayer (player world) (calculateUpCoordinate (player world))}
+  | downKey (keyboard world) = world {player = movePlayer (player world) (calculateDownCoordinate (player world))}
+  | leftKey (keyboard world) = world {player = movePlayer (player world) (calculateLeftCoordinate (player world))}
+  | rightKey (keyboard world) = world {player = movePlayer (player world) (calculateRightCoordinate (player world))}
+  | otherwise = world
 
 calculateUpCoordinate :: Player -> Coordinate
-calculateUpCoordinate player = Coordinate oldX (oldY + 10)
-  where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
-        oldX = x playerLocation
-        oldY = y playerLocation
+calculateUpCoordinate player = calculateCoordinate player 0 10
 
 calculateDownCoordinate :: Player -> Coordinate
-calculateDownCoordinate player = Coordinate oldX (oldY - 10)
-  where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
-        oldX = x playerLocation
-        oldY = y playerLocation
+calculateDownCoordinate player = calculateCoordinate player 0 (-10)
 
 calculateLeftCoordinate :: Player -> Coordinate
-calculateLeftCoordinate player = Coordinate (oldX -10) oldY
-  where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
-        oldX = x playerLocation
-        oldY = y playerLocation
+calculateLeftCoordinate player = calculateCoordinate player (-10) 0
 
 calculateRightCoordinate :: Player -> Coordinate
-calculateRightCoordinate player = Coordinate (oldX +10) oldY
-  where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
-        oldX = x playerLocation
-        oldY = y playerLocation
+calculateRightCoordinate player = calculateCoordinate player 10 0
+
+calculateCoordinate :: Player -> Float -> Float -> Coordinate
+calculateCoordinate player offsetX offsetY = Coordinate (oldX + offsetX) (oldY + offsetY)
+  where
+    playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
+    oldX = x playerLocation
+    oldY = y playerLocation
 
 movePlayer :: Player -> Coordinate -> Player
 movePlayer player newCoordinate =
@@ -76,6 +66,10 @@ movePlayer player newCoordinate =
     positionInformation = spaceshipPositionInformation playerSpaceship'
     updatedPositionInformation = updateLocation positionInformation newCoordinate
 
+checkIfPlayerShouldShoot :: World -> World
+checkIfPlayerShouldShoot world
+  | shootKey (keyboard world) = shootBullet world
+  | otherwise = world
 
 {- JSON STUFF -}
 instance ToJSON Score where
@@ -96,4 +90,20 @@ writeJSON s = BS.writeFile scoreFile (encode s)
 loadJSON :: IO (Either String [Score])
 loadJSON = eitherDecode <$> getJSON
 
-{-  END JSON STUFF -}
+shootBullet :: World -> World
+shootBullet world = world {bullets = bullet' : bullets'}
+  where
+    playerSpaceship' = playerSpaceship (player world)
+    weapon = head (filter active (weapons playerSpaceship'))
+    bullet' = bullet weapon
+    bullets' = bullets world
+    spawnLocation = determineBulletsSpawnLocation playerSpaceship'
+
+determineBulletsSpawnLocation :: Spaceship -> Coordinate
+determineBulletsSpawnLocation playerSpaceship = Coordinate (x playerLocation) (y playerLocation + 10)
+  where
+    playerLocation = location (spaceshipPositionInformation playerSpaceship)
+
+
+
+

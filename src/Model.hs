@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+
 -- | This module contains the data types
 --   which represent the state of the game
 module Model where
@@ -8,7 +9,7 @@ import           Graphics.Gloss
 
 mockPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
 
-pistol = Pistol (Bullet (DamagePoints 10) mockPosition)
+pistol = Pistol (Bullet (DamagePoints 10) mockPosition) True
 
 initialSpaceship = Spaceship 1 (HealthPoints 100) [pistol] mockPosition
 
@@ -52,16 +53,19 @@ data Obstacle = Obstacle
   }
 
 data Item
-  = WeaponItem { weapon             :: Weapon
+  = WeaponItem { weaponItem         :: Weapon
                , weaponItemLocation :: Coordinate }
   | PowerUp { bonusHealth     :: HealthPoints
             , powerUpLocation :: Coordinate }
 
 data Weapon
-  = Pistol { bullet :: Bullet }
-  | Laser { bullet :: Bullet }
+  = Pistol { bullet :: Bullet
+           , active :: Bool }
+  | Laser { bullet :: Bullet
+          , active :: Bool }
   | Bazooka { bullet     :: Bullet
-            , reloadTime :: Int }
+            , reloadTime :: Int
+            , active     :: Bool }
 
 data Bullet = Bullet
   { damage                    :: DamagePoints
@@ -105,7 +109,7 @@ data Keyboard = Keyboard
   , leftKey  :: Bool
   , rightKey :: Bool
   , shootKey :: Bool
-  }  deriving (Show)
+  } deriving (Show)
 
 data Camera = Camera
   { upperLeftCorner  :: Coordinate
@@ -140,14 +144,16 @@ data Images = Images
   }
 
 {- JSON STUFF -}
-newtype Scores = Scores { scores :: [Score] } deriving (Show)
+newtype Scores = Scores
+  { scores :: [Score]
+  } deriving (Show)
 
 data Score = Score
-  { playername :: String
-    , playerscore :: Int
+  { playername  :: String
+  , playerscore :: Int
   } deriving (Generic, Show)
-{- END JSON STUFF -}
 
+{- END JSON STUFF -}
 updateLocation :: PositionInformation -> Coordinate -> PositionInformation
 updateLocation PositionInformation {destination = destination} coordinate =
   PositionInformation {location = coordinate, destination = destination}
