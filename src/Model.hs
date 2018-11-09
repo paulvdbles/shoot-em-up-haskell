@@ -139,14 +139,12 @@ data Images = Images
   , obstacleImage :: Picture
   }
 
-{- JSON STUFF -}
-newtype Scores = Scores { scores :: [Score] } deriving (Show)
+newtype Scores = Scores { unScore :: [Score] } deriving (Show)
 
 data Score = Score
   { playername :: String
     , playerscore :: Int
   } deriving (Generic, Show)
-{- END JSON STUFF -}
 
 updateLocation :: PositionInformation -> Coordinate -> PositionInformation
 updateLocation PositionInformation {destination = destination} coordinate =

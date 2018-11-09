@@ -75,25 +75,3 @@ movePlayer player newCoordinate =
     playerSpaceship' = playerSpaceship player
     positionInformation = spaceshipPositionInformation playerSpaceship'
     updatedPositionInformation = updateLocation positionInformation newCoordinate
-
-
-{- JSON STUFF -}
-instance ToJSON Score where
-  toEncoding = genericToEncoding defaultOptions
-
-instance FromJSON Score
-
-scoreFile :: FilePath
-scoreFile = "scores.json"
-
-getJSON :: IO BS.ByteString
-getJSON = BS.readFile scoreFile
-
--- TODO add type here
-writeJSON s = BS.writeFile scoreFile (encode s)
-
--- loadJSON :: Maybe JSON
-loadJSON :: IO (Either String [Score])
-loadJSON = eitherDecode <$> getJSON
-
-{-  END JSON STUFF -}
