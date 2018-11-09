@@ -10,22 +10,15 @@ import           System.Random
 
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
-step secs world = do
-  print (keyboard world)
-  return (checkIfPlayerShouldBeMoved world)
+step secs world = return (checkIfPlayerShouldBeMoved world)
 
 checkIfPlayerShouldBeMoved :: World -> World
 checkIfPlayerShouldBeMoved world
-  | upKey (keyboard world) = world {player = movePlayerUp (player world)}
---  | downKey (keyboard world) = world {player = movePlayerDown (player world)}
---  | leftKey (keyboard world) = world {player = movePlayerLeft (player world)}
---  | leftKey (keyboard world) = world {player = movePlayerRight (player world)}
+  | upKey (keyboard world) = world {player = movePlayer (player world) (calculateUpCoordinate (player world))}
+  | downKey (keyboard world) = world {player = movePlayer (player world) (calculateDownCoordinate (player world))}
+  | leftKey (keyboard world) = world {player = movePlayer (player world) (calculateLeftCoordinate (player world))}
+  | rightKey (keyboard world) =  world {player = movePlayer (player world) (calculateRightCoordinate (player world))}
   | otherwise = world
-
---    downKeyPressed -> undefined
---    leftKeyPressed -> undefined
---    rightKeyPressed -> undefined
-
 
 -- | Handle user input
 input :: Event -> World -> IO World
@@ -41,15 +34,36 @@ input event world =
     EventKey (SpecialKey KeyRight) Up _ _ -> return (world {keyboard = (keyboard world) {rightKey = False}})
     _ -> return world
 
-movePlayerUp :: Player -> Player
-movePlayerUp player =
+
+calculateUpCoordinate :: Player -> Coordinate
+calculateUpCoordinate player = Coordinate oldX (oldY + 5)
+  where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
+        oldX = x playerLocation
+        oldY = y playerLocation
+
+calculateDownCoordinate :: Player -> Coordinate
+calculateDownCoordinate player = Coordinate oldX (oldY - 5)
+  where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
+        oldX = x playerLocation
+        oldY = y playerLocation
+
+calculateLeftCoordinate :: Player -> Coordinate
+calculateLeftCoordinate player = Coordinate (oldX -5) oldY
+  where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
+        oldX = x playerLocation
+        oldY = y playerLocation
+
+calculateRightCoordinate :: Player -> Coordinate
+calculateRightCoordinate player = Coordinate (oldX +5) oldY
+  where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
+        oldX = x playerLocation
+        oldY = y playerLocation
+
+movePlayer :: Player -> Coordinate -> Player
+movePlayer player newCoordinate =
   player {playerSpaceship = updateSpaceshipPositionInformation playerSpaceship' updatedPositionInformation}
   where
     playerSpaceship' = playerSpaceship player
     positionInformation = spaceshipPositionInformation playerSpaceship'
-    playerLocation = location positionInformation
-    oldX = x playerLocation
-    oldY = y playerLocation
-    newCoordinates = Coordinate oldX (oldY + 5) -- TODO: Speed gebruiken
-    updatedPositionInformation = updateLocation positionInformation newCoordinates
+    updatedPositionInformation = updateLocation positionInformation newCoordinate
 
