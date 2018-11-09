@@ -1,9 +1,8 @@
 module Json where
 
-import Model (Score, Scores)
 import           Data.Aeson
-import qualified Data.ByteString.Lazy             as BS
-
+import qualified Data.ByteString.Lazy as BS
+import           Model                (Score, Scores, unScore)
 
 instance ToJSON Score where
   toEncoding = genericToEncoding defaultOptions
@@ -17,8 +16,8 @@ getJSON :: IO BS.ByteString
 getJSON = BS.readFile scoreFile
 
 -- TODO add type here
-writeJSON s = BS.writeFile scoreFile (encode s)
+writeJSON :: Scores -> IO ()
+writeJSON s = BS.writeFile scoreFile (encode (unScore s))
 
--- loadJSON :: Maybe JSON
 loadJSON :: IO (Either String [Score])
 loadJSON = eitherDecode <$> getJSON

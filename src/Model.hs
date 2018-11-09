@@ -162,7 +162,6 @@ data Score = Score
   , playerscore :: Int
   } deriving (Generic, Show)
 
-{- END JSON STUFF -}
 updateLocation :: PositionInformation -> Coordinate -> PositionInformation
 updateLocation PositionInformation {destination = destination} coordinate =
   PositionInformation {location = coordinate, destination = destination}
