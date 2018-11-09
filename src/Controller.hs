@@ -12,10 +12,19 @@ import Shooting
 
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
-step secs world = return $ updateBullets $ checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ updateIteration world
+step secs world
+  | state world == Playing = return $ updateBullets $ checkIfPlayerPauses $ checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ updateIteration world
+  | state world == Menu = return $ checkIfPlayerPauses world
 
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
+
+-- TODO check if we need to add extra LOC to go from GameOver/GameWin state to Menu or something
+checkIfPlayerPauses :: World -> World
+checkIfPlayerPauses world
+  | pauseKey (keyboard world) && state world == Playing = world {state = Menu}
+  | pauseKey (keyboard world) && state world == Menu = world {state = Playing}
+  | otherwise = world
 
 -- | Handle user input
 input :: Event -> World -> IO World
@@ -31,6 +40,8 @@ input event world =
     EventKey (SpecialKey KeyRight) Up _ _ -> return (world {keyboard = (keyboard world) {rightKey = False}})
     EventKey (Char 'z') Down _ _ -> return (world {keyboard = (keyboard world) {shootKey = True}})
     EventKey (Char 'z') Up _ _ -> return (world {keyboard = (keyboard world) {shootKey = False}})
+    EventKey (SpecialKey KeyEsc) Down _ _ -> return (world {keyboard = (keyboard world) {pauseKey = True}})
+    EventKey (SpecialKey KeyEsc) Up _ _ -> return (world {keyboard = (keyboard world) {pauseKey = False}})
     EventResize newSize ->
       if newSize /= (720, 960)
         then exitSuccess -- sorry for this

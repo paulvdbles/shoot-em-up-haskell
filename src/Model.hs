@@ -20,13 +20,13 @@ emptyLevel = Level []
 mockCamera = Camera (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0)
 
 initialKeyboard :: Keyboard
-initialKeyboard = Keyboard False False False False False
+initialKeyboard = Keyboard False False False False False False
 
 initialDisplay :: Display
 initialDisplay = InWindow "shoot-em-up-haskell" (720, 960) (0, 0)
 
 initialState :: World
-initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard 0
+initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard 0 Playing
 
 data Spaceship = Spaceship
   { speed                        :: Int
@@ -85,6 +85,9 @@ data PositionInformation = PositionInformation
   , destination :: Coordinate
   }
 
+data State = Menu | Playing | GameOver | GameWin
+  deriving (Eq)
+
 newtype DamagePoints =
   DamagePoints Int
   deriving (Eq)
@@ -110,6 +113,7 @@ data World = World
   , camera    :: Camera
   , keyboard  :: Keyboard
   , iteration :: Int
+  , state     :: State
   }
 
 data Keyboard = Keyboard
@@ -118,7 +122,8 @@ data Keyboard = Keyboard
   , leftKey  :: Bool
   , rightKey :: Bool
   , shootKey :: Bool
-  } deriving (Show)
+  , pauseKey :: Bool
+  }  deriving (Show)
 
 data Camera = Camera
   { upperLeftCorner  :: Coordinate
@@ -156,7 +161,6 @@ newtype Scores = Scores
   { unScore :: [Score]
   } deriving (Show)
 
-{- JSON STUFF -}
 data Score = Score
   { playername  :: String
   , playerscore :: Int

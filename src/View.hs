@@ -5,7 +5,9 @@ import           Graphics.Gloss.Interface.Pure.Game
 import           Model
 
 view :: World -> IO Picture
-view world = return (pictures (drawPlayer (player world) : drawBullets world))
+view world
+  | state world == Playing = return (pictures (drawPlayer (player world) : drawBullets world))
+  | state world == Menu = return (pictures [drawPlayer (player world), translate (-250) 0 $ color red  (text "Paused")])
 
 drawPlayer :: Player -> Picture
 drawPlayer Player {playerSpaceship = spaceship} =
