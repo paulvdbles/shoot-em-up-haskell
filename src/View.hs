@@ -5,14 +5,16 @@ import           Graphics.Gloss.Interface.Pure.Game
 import           Model
 
 view :: World -> IO Picture
-view World {player = player} = return (pictures [drawPlayer player])
+view World {player = player} =
+  return (pictures [drawPlayer player, translate 0 0 $ color white $ circleSolid 10])
 
 drawPlayer :: Player -> Picture
 drawPlayer Player {playerSpaceship = spaceship} =
-  translate playerXPosition playerYPosition $ color (light blue) $ rectangleSolid 50 80
+  translate (x playerPosition) (y playerPosition) $ color (light blue) $ rectangleSolid 50 80
   where
     playerPosition = location (spaceshipPositionInformation spaceship)
-    playerXPosition = x playerPosition
-    playerYPosition = y playerPosition
 
-
+drawBullet :: Bullet -> Picture
+drawBullet bullet = translate (x bulletPosition) (y bulletPosition) $ color white $ circleSolid 10
+  where
+    bulletPosition = location (bulletPositionInformation bullet)

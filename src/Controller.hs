@@ -20,6 +20,10 @@ checkIfPlayerShouldBeMoved world
   | rightKey (keyboard world) =  world {player = movePlayer (player world) (calculateRightCoordinate (player world))}
   | otherwise = world
 
+checkIfPlayerShouldShoot :: World -> World
+checkIfPlayerShouldShoot world
+  | shootKey (keyboard world) = undefined
+
 -- | Handle user input
 input :: Event -> World -> IO World
 input event world =
@@ -32,29 +36,31 @@ input event world =
     EventKey (SpecialKey KeyLeft) Up _ _ -> return (world {keyboard = (keyboard world) {leftKey = False}})
     EventKey (SpecialKey KeyRight) Down _ _ -> return (world {keyboard = (keyboard world) {rightKey = True}})
     EventKey (SpecialKey KeyRight) Up _ _ -> return (world {keyboard = (keyboard world) {rightKey = False}})
+    EventKey (Char 'z') Down _ _ -> return (world {keyboard = (keyboard world) {shootKey = True}})
+    EventKey (Char 'z') Up _ _ -> return (world {keyboard = (keyboard world) {shootKey = False}})
     _ -> return world
 
 
 calculateUpCoordinate :: Player -> Coordinate
-calculateUpCoordinate player = Coordinate oldX (oldY + 5)
+calculateUpCoordinate player = Coordinate oldX (oldY + 10)
   where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
         oldX = x playerLocation
         oldY = y playerLocation
 
 calculateDownCoordinate :: Player -> Coordinate
-calculateDownCoordinate player = Coordinate oldX (oldY - 5)
+calculateDownCoordinate player = Coordinate oldX (oldY - 10)
   where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
         oldX = x playerLocation
         oldY = y playerLocation
 
 calculateLeftCoordinate :: Player -> Coordinate
-calculateLeftCoordinate player = Coordinate (oldX -5) oldY
+calculateLeftCoordinate player = Coordinate (oldX -10) oldY
   where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
         oldX = x playerLocation
         oldY = y playerLocation
 
 calculateRightCoordinate :: Player -> Coordinate
-calculateRightCoordinate player = Coordinate (oldX +5) oldY
+calculateRightCoordinate player = Coordinate (oldX +10) oldY
   where playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
         oldX = x playerLocation
         oldY = y playerLocation

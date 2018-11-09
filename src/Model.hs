@@ -20,7 +20,7 @@ initialKeyboard :: Keyboard
 initialKeyboard = Keyboard False False False False False
 
 initialState :: World
-initialState = World initialPlayer [] [] emptyLevel mockCamera initialKeyboard
+initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard
 
 data Spaceship = Spaceship
   { speed                        :: Int
@@ -91,6 +91,7 @@ data World = World
   { player    :: Player
   , enemies   :: [Enemy]
   , obstacles :: [Obstacle]
+  , bullets   :: [Bullet]
   , level     :: Level
   , camera    :: Camera
   , keyboard  :: Keyboard
