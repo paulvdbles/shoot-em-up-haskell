@@ -1,4 +1,4 @@
-module Json where
+module FileSystem where
 
 import           Data.Aeson
 import qualified Data.ByteString.Lazy as BS

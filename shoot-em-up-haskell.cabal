@@ -31,6 +31,7 @@ library
     , View
     , Shooting
     , Movement
+    , FileSystem
   other-modules:
       Paths_shoot_em_up_haskell
   hs-source-dirs:
