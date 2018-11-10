@@ -13,9 +13,7 @@ import           System.Random
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
 step secs world
-  | state world == Playing =
-    return $
-    updateBullets $ checkIfPlayerPauses $ checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ updateIteration world
+  | state world == Playing = return $ updateBullets $ checkIfPlayerPauses $ checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
 
 updateIteration :: World -> World
@@ -25,7 +23,7 @@ updateIteration world = world {iteration = iteration world + 1}
 checkIfPlayerPauses :: World -> World
 checkIfPlayerPauses world
   | pauseKey (keyboard world) && state world == Playing = world {state = Menu}
-  | pauseKey (keyboard world) && state world == Menu = world {state = Playing}
+  | enterKey (keyboard world) && state world == Menu = world {state = Playing}
   | otherwise = world
 
 -- | Handle user input
@@ -44,6 +42,8 @@ input event world =
     EventKey (Char 'z') Up _ _ -> return (world {keyboard = (keyboard world) {shootKey = False}})
     EventKey (SpecialKey KeyEsc) Down _ _ -> return (world {keyboard = (keyboard world) {pauseKey = True}})
     EventKey (SpecialKey KeyEsc) Up _ _ -> return (world {keyboard = (keyboard world) {pauseKey = False}})
+    EventKey (SpecialKey KeyEnter) Down _ _ -> return (world {keyboard = (keyboard world) {enterKey = True}})
+    EventKey (SpecialKey KeyEnter) Up _ _ -> return (world {keyboard = (keyboard world) {enterKey = False}})
     EventResize newSize ->
       if newSize /= (720, 960)
         then exitSuccess -- sorry for this

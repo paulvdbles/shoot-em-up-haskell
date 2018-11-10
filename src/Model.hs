@@ -103,6 +103,7 @@ data Keyboard = Keyboard
   , rightKey :: Bool
   , shootKey :: Bool
   , pauseKey :: Bool
+  , enterKey :: Bool
   }  deriving (Show)
 
 data Camera = Camera

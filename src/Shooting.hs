@@ -35,3 +35,6 @@ determineBulletsPositionInformation playerSpaceship = PositionInformation locati
     location' = Coordinate (x playerLocation) (y playerLocation + 55)
     destination = Coordinate (x playerLocation) (y playerLocation + 1250) -- Add +1250 so the bullet's destination is outside the screen
     playerLocation = location (spaceshipPositionInformation playerSpaceship)
+
+checkIfBulletHitsEnemy :: World -> World
+checkIfBulletHitsEnemy world = undefined
