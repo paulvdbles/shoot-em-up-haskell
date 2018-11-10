@@ -12,16 +12,16 @@ view world
                           return (pictures ([drawPlayer (player world), translate (-220) 350 $ color red (text "Paused")] ++ [translate n m $ color red (text s) | m <- [100,100..], n <- [200,250..], s <- map scoreToString (getEither sc)]))
   where
     getEither (Right s) = s
-    getEither (Left _) = [Score {playername="Cannot load scores                  ", playerscore=0}]
+    getEither (Left _) = [Score {playerName="Cannot load scores                  ", playerScore=0}]
 
 scoreToString :: Score -> String
-scoreToString Score {playername=playername, playerscore=playerscore} = playername ++ replicate getStringLength ' ' ++ ps'
+scoreToString Score {playerName=playerName, playerScore=playerScore} = playerName ++ replicate getStringLength ' ' ++ ps'
   where
     getStringLength | psl + pl > 10 = 10 - psl - pl
                     | otherwise = 1
     ps' :: String
-    ps' = show playerscore
-    pl = length playername
+    ps' = show playerScore
+    pl = length playerName
     psl = length ps'
 
 drawPlayer :: Player -> Picture

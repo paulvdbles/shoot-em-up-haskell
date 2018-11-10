@@ -142,6 +142,6 @@ newtype Scores = Scores
   } deriving (Show)
 
 data Score = Score
-  { playername  :: String
-  , playerscore :: Int
+  { playerName  :: String
+  , playerScore :: Int
   } deriving (Generic, Show)
