@@ -145,16 +145,3 @@ data Score = Score
   { playername  :: String
   , playerscore :: Int
   } deriving (Generic, Show)
-
-updateLocation :: PositionInformation -> Coordinate -> PositionInformation
-updateLocation PositionInformation {destination = destination} coordinate =
-  PositionInformation {location = coordinate, destination = destination}
-
-updateSpaceshipPositionInformation :: Spaceship -> PositionInformation -> Spaceship
-updateSpaceshipPositionInformation spaceship position = spaceship {spaceshipPositionInformation = position}
-
-updatePlayersSpaceship :: Player -> Spaceship -> Player
-updatePlayersSpaceship player spaceship = player {playerSpaceship = spaceship}
-
-updateWorldsPlayer :: World -> Player -> World
-updateWorldsPlayer world player = world {player = player}

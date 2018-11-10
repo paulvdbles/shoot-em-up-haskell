@@ -13,7 +13,9 @@ import           System.Random
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
 step secs world
-  | state world == Playing = return $ updateBullets $ checkIfPlayerPauses $ checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ updateIteration world
+  | state world == Playing =
+    return $
+    updateBullets $ checkIfPlayerPauses $ checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
 
 updateIteration :: World -> World
@@ -47,4 +49,3 @@ input event world =
         then exitSuccess -- sorry for this
         else return world
     _ -> return world
-

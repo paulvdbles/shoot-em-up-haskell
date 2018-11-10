@@ -1,6 +1,6 @@
 module Movement where
 
-import Model
+import           Model
 
 checkIfPlayerShouldBeMoved :: World -> World
 checkIfPlayerShouldBeMoved world
@@ -31,11 +31,9 @@ calculateCoordinate player offsetX offsetY = Coordinate (oldX + offsetX) (oldY +
 
 movePlayer :: Player -> Coordinate -> Player
 movePlayer player newCoordinate =
-  player {playerSpaceship = updateSpaceshipPositionInformation playerSpaceship' updatedPositionInformation}
+  player {playerSpaceship = (playerSpaceship player){spaceshipPositionInformation = updatedPositionInformation}}
   where
-    playerSpaceship' = playerSpaceship player
-    positionInformation = spaceshipPositionInformation playerSpaceship'
-    updatedPositionInformation = updateLocation positionInformation newCoordinate
+    updatedPositionInformation = (spaceshipPositionInformation (playerSpaceship player)) {location = newCoordinate}
 
 updateBullets :: World -> World
 updateBullets world = world {bullets = map moveBulletToDestination (removeOldBullets (bullets world))}
