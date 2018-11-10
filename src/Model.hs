@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+
 -- | This module contains the data types
 --   which represent the state of the game
 module Model where
@@ -20,6 +21,9 @@ mockCamera = Camera (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0) (Coordina
 
 initialKeyboard :: Keyboard
 initialKeyboard = Keyboard False False False False False
+
+initialDisplay :: Display
+initialDisplay = InWindow "shoot-em-up-haskell" (720, 960) (0, 0)
 
 initialState :: World
 initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard 0
@@ -58,16 +62,16 @@ data Item
             , powerUpLocation :: Coordinate }
 
 data Weapon
-  = Pistol { bullet :: Bullet
-           , active :: Bool
-           , lastShotAtFrame :: Int}
-  | Laser { bullet :: Bullet
-          , active :: Bool
-          , lastShotAtFrame :: Int}
-  | Bazooka { bullet     :: Bullet
-            , reloadTime :: Int
-            , active     :: Bool
-            , lastShotAtFrame :: Int}
+  = Pistol { bullet          :: Bullet
+           , active          :: Bool
+           , lastShotAtFrame :: Int }
+  | Laser { bullet          :: Bullet
+          , active          :: Bool
+          , lastShotAtFrame :: Int }
+  | Bazooka { bullet          :: Bullet
+            , reloadTime      :: Int
+            , active          :: Bool
+            , lastShotAtFrame :: Int }
 
 data Bullet = Bullet
   { damage                    :: DamagePoints
@@ -146,14 +150,15 @@ data Images = Images
   , obstacleImage :: Picture
   }
 
-newtype Scores = Scores { unScore :: [Score] } deriving (Show)
-{- JSON STUFF -}
+newtype Scores = Scores
+  { unScore :: [Score]
+  } deriving (Show)
 
+{- JSON STUFF -}
 data Score = Score
   { playername  :: String
   , playerscore :: Int
   } deriving (Generic, Show)
-
 
 {- END JSON STUFF -}
 updateLocation :: PositionInformation -> Coordinate -> PositionInformation

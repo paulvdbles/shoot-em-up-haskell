@@ -9,7 +9,7 @@ import Graphics.Gloss.Interface.IO.Game
 main :: IO ()
 main =
   playIO
-    (InWindow "shoot-em-up-haskell" (720, 960) (0, 0))
+    initialDisplay
     black -- Background color
     60   -- Frames per second
     initialState -- Initial state

@@ -10,6 +10,8 @@ import qualified Data.ByteString.Lazy             as BS
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.IO.Game
 import           System.Random
+import System.Exit
+
 
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
@@ -32,6 +34,9 @@ input event world =
     EventKey (SpecialKey KeyRight) Up _ _ -> return (world {keyboard = (keyboard world) {rightKey = False}})
     EventKey (Char 'z') Down _ _ -> return (world {keyboard = (keyboard world) {shootKey = True}})
     EventKey (Char 'z') Up _ _ -> return (world {keyboard = (keyboard world) {shootKey = False}})
+    EventResize newSize -> if newSize /= (720, 960)
+                              then exitSuccess -- sorry for this
+                              else return world
     _ -> return world
 
 checkIfPlayerShouldBeMoved :: World -> World
