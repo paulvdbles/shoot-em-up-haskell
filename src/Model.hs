@@ -56,6 +56,7 @@ data Weapon
 
 data Bullet = Bullet
   { damage                    :: DamagePoints
+  , hit                       :: Bool
   , bulletPositionInformation :: PositionInformation
   }
 
@@ -103,6 +104,7 @@ data Keyboard = Keyboard
   , rightKey :: Bool
   , shootKey :: Bool
   , pauseKey :: Bool
+  , enterKey :: Bool
   }  deriving (Show)
 
 data Camera = Camera
@@ -117,6 +119,8 @@ newtype Level =
 
 newtype Spawn =
   Spawn (Placeable, Coordinate)
+
+-- spawn moet bevatten: enemy, frame waarop enemy moet spawnen, spawn coordinaten
 
 data Placeable
   = PlaceableSpaceship Spaceship

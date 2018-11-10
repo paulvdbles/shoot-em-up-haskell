@@ -6,7 +6,7 @@ import           Model
 
 view :: World -> IO Picture
 view world
-  | state world == Playing = return (pictures (drawPlayer (player world) : drawBullets world))
+  | state world == Playing = return (pictures (drawPlayer (player world) : drawBullets world ++ drawEnemies world))
   | state world == Menu = do
     sc <- scores world
     return
@@ -42,3 +42,10 @@ drawBullet :: Bullet -> Picture
 drawBullet bullet = translate (x bulletPosition) (y bulletPosition) $ color white $ circleSolid 10
   where
     bulletPosition = location (bulletPositionInformation bullet)
+
+drawEnemies :: World -> [Picture]
+drawEnemies world = map drawEnemy (enemies world)
+
+drawEnemy :: Enemy -> Picture
+drawEnemy enemy = translate (x enemyPosition) (y enemyPosition) $ color magenta $ rectangleSolid 40 40
+  where enemyPosition = location (spaceshipPositionInformation (enemySpaceship enemy))
