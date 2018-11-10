@@ -23,7 +23,7 @@ initialKeyboard :: Keyboard
 initialKeyboard = Keyboard False False False False False False
 
 initialState :: World
-initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard 0 Playing loadJSON
+initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard 0 Playing readScoreFile
 
 initialDisplay :: Display
 initialDisplay = InWindow "shoot-em-up-haskell" (720, 960) (0, 0)

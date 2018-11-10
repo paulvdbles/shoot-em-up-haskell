@@ -8,17 +8,22 @@ view :: World -> IO Picture
 view world
   | state world == Playing = return (pictures (drawPlayer (player world) : drawBullets world))
   | state world == Menu = do
-                          sc <- scores world
-                          return (pictures ([drawPlayer (player world), translate (-220) 350 $ color red (text "Paused")] ++ [translate n m $ color red (text s) | m <- [100,100..], n <- [200,250..], s <- map scoreToString (getEither sc)]))
+    print "loading scores"
+    sc <- scores world
+    print "scores loaded"
+    return (pictures [drawPlayer (player world), translate (-220) 350 $ color red (text "Paused")])
   where
     getEither (Right s) = s
-    getEither (Left _) = [Score {playerName="Cannot load scores                  ", playerScore=0}]
+    getEither (Left _) = [Score {playerName = "Cannot load scores                  ", playerScore = 0}]
 
+--                           ++ [translate n m $ color red (text s) | m <- [100,100..], n <- [200,250..], s <- map scoreToString (getEither sc)]
 scoreToString :: Score -> String
-scoreToString Score {playerName=playerName, playerScore=playerScore} = playerName ++ replicate getStringLength ' ' ++ ps'
+scoreToString Score {playerName = playerName, playerScore = playerScore} =
+  playerName ++ replicate getStringLength ' ' ++ ps'
   where
-    getStringLength | psl + pl > 10 = 10 - psl - pl
-                    | otherwise = 1
+    getStringLength
+      | psl + pl > 10 = 10 - psl - pl
+      | otherwise = 1
     ps' :: String
     ps' = show playerScore
     pl = length playerName
@@ -31,7 +36,7 @@ drawPlayer Player {playerSpaceship = spaceship} =
     playerPosition = location (spaceshipPositionInformation spaceship)
 
 drawBullets :: World -> [Picture]
-drawBullets  world = map drawBullet (bullets world)
+drawBullets world = map drawBullet (bullets world)
 
 drawBullet :: Bullet -> Picture
 drawBullet bullet = translate (x bulletPosition) (y bulletPosition) $ color white $ circleSolid 10

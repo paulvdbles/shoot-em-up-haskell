@@ -15,9 +15,8 @@ scoreFile = "scores.json"
 getJSON :: IO BS.ByteString
 getJSON = BS.readFile scoreFile
 
--- TODO add type here
-writeJSON :: Scores -> IO ()
-writeJSON s = BS.writeFile scoreFile (encode (unScore s))
+writeScoreFile :: Scores -> IO ()
+writeScoreFile s = BS.writeFile scoreFile (encode (unScore s))
 
-loadJSON :: IO (Either String [Score])
-loadJSON = eitherDecode <$> getJSON
+readScoreFile :: IO (Either String [Score])
+readScoreFile = eitherDecode <$> getJSON
