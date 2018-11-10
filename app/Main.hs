@@ -3,7 +3,7 @@ module Main where
 import           Controller
 import           FileSystem
 import           Graphics.Gloss.Interface.IO.Game
-import           Levels
+import           Level.Levels
 import           Model
 import           View
 
@@ -26,7 +26,7 @@ enemy :: Enemy
 enemy = Enemy 10 10 (Spaceship 1 100 [gun] testEnemyPosition) (-1)
 
 initialState :: World
-initialState = World initialPlayer [] [] [] Levels.level mockCamera initialKeyboard 0 Playing readScoreFile
+initialState = World initialPlayer [] [] [] Level.Levels.level mockCamera initialKeyboard 0 Playing readScoreFile
 
 main :: IO ()
 main =
