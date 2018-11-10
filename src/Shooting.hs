@@ -59,24 +59,36 @@ determineBulletsPositionInformation playerSpaceship = PositionInformation locati
 --      ]
 --    enemies' = enemies world
 --    bullets' = bullets world
+updateEnemiesForAllBullets :: World -> World
+updateEnemiesForAllBullets world = world{bullets = updatedBullets, enemies = updatedEnemies}
+  where
+    bullets' = bullets world
+    enemies' = enemies world
+    updatedBullets = map (updateBulletsStatus enemies') bullets'
+    updatedEnemies = map (updateEnemiesHealth bullets') enemies'
 
 -- Als een bullet een enemy raakt:
 --  - moet de bullet geupdatet worden naar hit = tue
 --  - moet de enemy's hp geupdatet worden met damage points van bullet
+-- voor iedere enemy checken of hij met een van de bullets raakt
+-- voor iedere bullet checken of hij met een van de enemies raakt
 
 
-updateEnemiesForAllBullets :: World -> World
-updateEnemiesForAllBullets world = undefined
-  where
-    results = map (updateEnemyForAllBullets bullets') enemies'
-    bullets' = bullets world
-    enemies' = enemies world
+updateEnemiesHealth :: [Bullet] -> Enemy -> Enemy
+updateEnemiesHealth bullets enemy
+  | foldr (\b acc -> checkIfBulletHitsEnemy enemy b || acc) False bullets =
+    enemy {enemySpaceship = (enemySpaceship enemy) {health = health (enemySpaceship enemy) - 10}}
+  | otherwise = enemy
 
-updateEnemyForAllBullets :: [Bullet] -> Enemy -> [(Enemy, Bullet, Bool)]
-updateEnemyForAllBullets bullets enemy = map (checkIfBulletHitsEnemy enemy) bullets
+updateBulletsStatus :: [Enemy] -> Bullet -> Bullet
+updateBulletsStatus enemies bullet
+  | foldr (\e acc -> checkIfBulletHitsEnemy e bullet || acc) False enemies = bullet {hit = True}
+  | otherwise = bullet
 
-checkIfBulletHitsEnemy :: Enemy -> Bullet -> (Enemy, Bullet, Bool)
-checkIfBulletHitsEnemy enemy bullet = (enemy, bullet, hit)
+checkIfBulletHitsEnemy :: Enemy -> Bullet -> Bool
+checkIfBulletHitsEnemy enemy bullet =
+  (bulletXCoordinate >= enemyLeftBound && bulletXCoordinate <= enemyRightBound) &&
+  (bulletYCoordinate >= enemyLowerBound && bulletYCoordinate <= enemyUpperBound)
   where
     bulletXCoordinate = x (location (bulletPositionInformation bullet))
     bulletYCoordinate = y (location (bulletPositionInformation bullet))
@@ -84,5 +96,3 @@ checkIfBulletHitsEnemy enemy bullet = (enemy, bullet, hit)
     enemyRightBound = x (location (spaceshipPositionInformation (enemySpaceship enemy))) + 20
     enemyUpperBound = y (location (spaceshipPositionInformation (enemySpaceship enemy))) + 20
     enemyLowerBound = y (location (spaceshipPositionInformation (enemySpaceship enemy))) - 20
-    hit = (bulletXCoordinate >= enemyLeftBound && bulletXCoordinate <= enemyRightBound) &&
-            (bulletYCoordinate >= enemyLowerBound && bulletYCoordinate <= enemyUpperBound)
