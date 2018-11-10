@@ -13,12 +13,15 @@ import           System.Random
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
 step secs world
-  | state world == Playing = return $ updateBullets $ checkIfPlayerPauses $ checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ updateIteration world
+  | state world == Playing =
+    return $
+    updateBullets $
+    checkIfPlayerPauses $
+    checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ removeHitBullets $ updateEnemiesForAllBullets $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
 
 -- TODO: verwijder enemies met negatief HP
 -- TODO: verwijder bullets met hit = true
-
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
 
@@ -52,3 +55,9 @@ input event world =
         then exitSuccess -- sorry for this
         else return world
     _ -> return world
+
+removeHitBullets :: World -> World
+removeHitBullets world = world {bullets = filter (not . hit) (bullets world)}
+
+--removeDeadEnemies :: World -> World
+--removeDeadEnemies world = world {enemies = filter (<= 0 . health . enemySpaceship) (enemies world)}

@@ -41,18 +41,11 @@ data Item
             , powerUpLocation :: Coordinate }
 
 data Weapon
-  = Pistol { bullet          :: Bullet
+ = Weapon { bullet          :: Bullet
            , active          :: Bool
            , lastShotAtFrame :: Int
            , reloadTime      :: Int }
-  | Laser { bullet          :: Bullet
-          , active          :: Bool
-          , lastShotAtFrame :: Int
-          , reloadTime      :: Int}
-  | Bazooka { bullet          :: Bullet
-            , reloadTime      :: Int
-            , active          :: Bool
-            , lastShotAtFrame :: Int }
+
 
 data Bullet = Bullet
   { damage                    :: DamagePoints
@@ -68,21 +61,13 @@ data PositionInformation = PositionInformation
 data State = Menu | Playing | GameOver | GameWin
   deriving (Eq)
 
-newtype DamagePoints =
-  DamagePoints Int
-  deriving (Eq)
+type DamagePoints = Int
 
-newtype HealthPoints =
-  HealthPoints Int
-  deriving (Eq)
+type HealthPoints = Int
 
-newtype ScorePoints =
-  ScorePoints Int
-  deriving (Eq)
+type ScorePoints = Int
 
-newtype Seconds =
-  Seconds Int
-  deriving (Eq)
+type Seconds = Int
 
 data World = World
   { player    :: Player
