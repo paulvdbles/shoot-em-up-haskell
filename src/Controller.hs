@@ -48,10 +48,3 @@ input event world =
         else return world
     _ -> return world
 
-moveBulletToDestination :: Bullet -> Bullet
-moveBulletToDestination bullet = bullet {bulletPositionInformation = updatedPositionInformation}
-  where
-    currentLocation = location (bulletPositionInformation bullet)
-    newLocation = Coordinate (x currentLocation) (y currentLocation + 10)
-    destination' = destination (bulletPositionInformation bullet)
-    updatedPositionInformation = PositionInformation newLocation destination'
