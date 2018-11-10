@@ -9,25 +9,22 @@ view world
   | state world == Playing = return (pictures (drawPlayer (player world) : drawBullets world ++ drawEnemies world))
   | state world == Menu = do
     sc <- scores world
-    return
-      (pictures
-         ([ drawPlayer (player world)
-          , translate (-220) 350 $ color red (text "Paused")
-          , translate (-210) 320 $ scale 0.2 0.2 $ color orange (text "Press Enter to continue")
-          ] ++
-          [ translate x (fst ys) $ scale 0.2 0.2 $ color orange (text (snd ys))
-          | x <- [-220]
-          , ys <- zip [0,-25 .. -225] (map scoreToPlayerName (getEitherScore sc))
-          ] ++
-          [ translate x (fst ys) $ scale 0.2 0.2 $ color orange (text (snd ys))
-          | x <- [200]
-          , ys <- zip [0,-25 .. -225] (map scoreToPlayerScore (getEitherScore sc))
-          ]))
+    return (pictures ([drawPaused, drawPressEnter] ++ drawPlayerNames sc ++ drawPlayerScores sc))
   where
-    getEitherScore (Right s) = s
-    getEitherScore (Left err) = [Score {playerName = "Cannot load scores", playerScore = 0}]
     scoreToPlayerName Score {playerName = playerName} = playerName
     scoreToPlayerScore Score {playerScore = playerScore} = show playerScore
+    drawPaused = translate (-220) 350 $ color red (text "Paused")
+    drawPressEnter = translate (-210) 320 $ scale 0.2 0.2 $ color orange (text "Press Enter to continue")
+    drawPlayerNames sc =
+      [ translate x (fst ys) $ scale 0.2 0.2 $ color orange (text (snd ys))
+      | x <- [-220]
+      , ys <- zip [0,-25 .. -225] (map scoreToPlayerName sc)
+      ]
+    drawPlayerScores sc =
+      [ translate x (fst ys) $ scale 0.2 0.2 $ color orange (text (snd ys))
+      | x <- [200]
+      , ys <- zip [0,-25 .. -225] (map scoreToPlayerScore sc)
+      ]
 
 drawPlayer :: Player -> Picture
 drawPlayer Player {playerSpaceship = spaceship} =

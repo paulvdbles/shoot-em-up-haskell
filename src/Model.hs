@@ -40,13 +40,14 @@ data Item
                , weaponItemLocation :: Coordinate }
   | PowerUp { bonusHealth     :: HealthPoints
             , powerUpLocation :: Coordinate }
+  
 
-data Weapon
- = Weapon { bullet          :: Bullet
-           , active          :: Bool
-           , lastShotAtFrame :: Int
-           , reloadTime      :: Int }
-
+data Weapon = Weapon
+  { bullet          :: Bullet
+  , active          :: Bool
+  , lastShotAtFrame :: Int
+  , reloadTime      :: Int
+  }
 
 data Bullet = Bullet
   { damage                    :: DamagePoints
@@ -59,7 +60,11 @@ data PositionInformation = PositionInformation
   , destination :: Coordinate
   }
 
-data State = Menu | Playing | GameOver | GameWin
+data State
+  = Menu
+  | Playing
+  | GameOver
+  | GameWin
   deriving (Eq)
 
 type DamagePoints = Int
@@ -80,7 +85,7 @@ data World = World
   , keyboard  :: Keyboard
   , iteration :: Int
   , state     :: State
-  , scores    :: IO (Either String [Score])
+  , scores    :: IO [Score]
   }
 
 data Keyboard = Keyboard
@@ -91,7 +96,7 @@ data Keyboard = Keyboard
   , shootKey :: Bool
   , pauseKey :: Bool
   , enterKey :: Bool
-  }  deriving (Show)
+  } deriving (Show)
 
 data Camera = Camera
   { upperLeftCorner  :: Coordinate
@@ -103,11 +108,13 @@ data Camera = Camera
 newtype Level =
   Level [Spawn]
 
-newtype Spawn =
-  Spawn (Placeable, Coordinate)
+-- Contains the What, Where and When
+data Spawn =
+  Spawn Placeable Coordinate Time
+
+type Time = Int
 
 -- spawn moet bevatten: enemy, frame waarop enemy moet spawnen, spawn coordinaten
-
 data Placeable
   = PlaceableSpaceship Spaceship
   | PlaceableItem Item
@@ -130,8 +137,8 @@ data Images = Images
 newtype Scores = Scores
   { unScore :: [Score]
   } deriving (Show)
--- [Score {playerName = "David", playerScore = 1100},Score {playerName = "Paul", playerScore = 1042},Score {playerName = "Dank Pronk", playerScore = 999},Score {playerName = "player4", playerScore = 0},Score {playerName = "player5", playerScore = 0},Score {playerName = "player6", playerScore = 0},Score {playerName = "player7", playerScore = 0},Score {playerName = "player8", playerScore = 0},Score {playerName = "player9", playerScore = 0},Score {playerName = "player10", playerScore = 0}]
 
+-- [Score {playerName = "David", playerScore = 1100},Score {playerName = "Paul", playerScore = 1042},Score {playerName = "Dank Pronk", playerScore = 999},Score {playerName = "player4", playerScore = 0},Score {playerName = "player5", playerScore = 0},Score {playerName = "player6", playerScore = 0},Score {playerName = "player7", playerScore = 0},Score {playerName = "player8", playerScore = 0},Score {playerName = "player9", playerScore = 0},Score {playerName = "player10", playerScore = 0}]
 data Score = Score
   { playerName  :: String
   , playerScore :: Int
