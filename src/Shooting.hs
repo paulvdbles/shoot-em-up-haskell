@@ -64,24 +64,20 @@ updateEnemiesForAllBullets world = world{bullets = updatedBullets, enemies = upd
   where
     bullets' = bullets world
     enemies' = enemies world
-    updatedBullets = map (updateBulletsStatus enemies') bullets'
-    updatedEnemies = map (updateEnemiesHealth bullets') enemies'
+    updatedBullets = map (updateHitBullet enemies') bullets'
+    updatedEnemies = map (updateHitEnemy bullets' world) enemies'
 
--- Als een bullet een enemy raakt:
---  - moet de bullet geupdatet worden naar hit = tue
---  - moet de enemy's hp geupdatet worden met damage points van bullet
--- voor iedere enemy checken of hij met een van de bullets raakt
--- voor iedere bullet checken of hij met een van de enemies raakt
-
-
-updateEnemiesHealth :: [Bullet] -> Enemy -> Enemy
-updateEnemiesHealth bullets enemy
+updateHitEnemy :: [Bullet] -> World -> Enemy ->  Enemy
+updateHitEnemy bullets world enemy
   | foldr (\b acc -> checkIfBulletHitsEnemy enemy b || acc) False bullets =
-    enemy {enemySpaceship = (enemySpaceship enemy) {health = health (enemySpaceship enemy) - 10}}
+    enemy
+      { lastHitAtIteration = iteration world
+      , enemySpaceship = (enemySpaceship enemy) {health = health (enemySpaceship enemy) - 10}
+      }
   | otherwise = enemy
 
-updateBulletsStatus :: [Enemy] -> Bullet -> Bullet
-updateBulletsStatus enemies bullet
+updateHitBullet :: [Enemy] -> Bullet -> Bullet
+updateHitBullet enemies bullet
   | foldr (\e acc -> checkIfBulletHitsEnemy e bullet || acc) False enemies = bullet {hit = True}
   | otherwise = bullet
 

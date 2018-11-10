@@ -44,8 +44,11 @@ drawBullet bullet = translate (x bulletPosition) (y bulletPosition) $ color whit
     bulletPosition = location (bulletPositionInformation bullet)
 
 drawEnemies :: World -> [Picture]
-drawEnemies world = map drawEnemy (enemies world)
+drawEnemies world = map (drawEnemy (iteration world)) (enemies world)
 
-drawEnemy :: Enemy -> Picture
-drawEnemy enemy = translate (x enemyPosition) (y enemyPosition) $ color magenta $ rectangleSolid 40 40
+drawEnemy ::Int -> Enemy -> Picture
+drawEnemy currentIteration enemy = translate (x enemyPosition) (y enemyPosition) $ enemyColour $ rectangleSolid 40 40
   where enemyPosition = location (spaceshipPositionInformation (enemySpaceship enemy))
+        enemyColour = if lastHitAtIteration enemy > currentIteration - 5
+                          then color red -- make the enemy red for a few iterations
+                          else color azure

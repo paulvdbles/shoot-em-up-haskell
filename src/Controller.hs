@@ -17,11 +17,10 @@ step secs world
     return $
     updateBullets $
     checkIfPlayerPauses $
-    checkIfPlayerShouldBeMoved $ checkIfPlayerShouldShoot $ removeHitBullets $ updateEnemiesForAllBullets $ updateIteration world
+    checkIfPlayerShouldBeMoved $
+    checkIfPlayerShouldShoot $ removeDeadEnemies $ removeHitBullets $ updateEnemiesForAllBullets $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
 
--- TODO: verwijder enemies met negatief HP
--- TODO: verwijder bullets met hit = true
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
 
@@ -59,5 +58,8 @@ input event world =
 removeHitBullets :: World -> World
 removeHitBullets world = world {bullets = filter (not . hit) (bullets world)}
 
---removeDeadEnemies :: World -> World
---removeDeadEnemies world = world {enemies = filter (<= 0 . health . enemySpaceship) (enemies world)}
+removeDeadEnemies :: World -> World
+removeDeadEnemies world = world {enemies = filter enemyIsDead (enemies world)}
+
+enemyIsDead :: Enemy -> Bool
+enemyIsDead enemy = health (enemySpaceship enemy) > 0
