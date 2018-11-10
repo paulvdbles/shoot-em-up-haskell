@@ -9,7 +9,7 @@ import           Graphics.Gloss
 
 mockPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
 
-pistol = Pistol (Bullet (DamagePoints 10) mockPosition) True 0
+pistol = Pistol (Bullet (DamagePoints 10) mockPosition) True 0 10
 
 initialSpaceship = Spaceship 1 (HealthPoints 100) [pistol] mockPosition
 
@@ -64,10 +64,12 @@ data Item
 data Weapon
   = Pistol { bullet          :: Bullet
            , active          :: Bool
-           , lastShotAtFrame :: Int }
+           , lastShotAtFrame :: Int
+           , reloadTime      :: Int }
   | Laser { bullet          :: Bullet
           , active          :: Bool
-          , lastShotAtFrame :: Int }
+          , lastShotAtFrame :: Int
+          , reloadTime      :: Int}
   | Bazooka { bullet          :: Bullet
             , reloadTime      :: Int
             , active          :: Bool

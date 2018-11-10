@@ -9,9 +9,8 @@ import qualified Data.ByteString.Lazy             as BS
 
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.IO.Game
+import           System.Exit
 import           System.Random
-import System.Exit
-
 
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
@@ -34,9 +33,10 @@ input event world =
     EventKey (SpecialKey KeyRight) Up _ _ -> return (world {keyboard = (keyboard world) {rightKey = False}})
     EventKey (Char 'z') Down _ _ -> return (world {keyboard = (keyboard world) {shootKey = True}})
     EventKey (Char 'z') Up _ _ -> return (world {keyboard = (keyboard world) {shootKey = False}})
-    EventResize newSize -> if newSize /= (720, 960)
-                              then exitSuccess -- sorry for this
-                              else return world
+    EventResize newSize ->
+      if newSize /= (720, 960)
+        then exitSuccess -- sorry for this
+        else return world
     _ -> return world
 
 checkIfPlayerShouldBeMoved :: World -> World
@@ -94,8 +94,17 @@ movePlayer player newCoordinate =
 
 checkIfPlayerShouldShoot :: World -> World
 checkIfPlayerShouldShoot world
-  | shootKey (keyboard world) = shootBullet world
+  | shootKey (keyboard world) = shootBulletIfWeaponIsReloaded world
   | otherwise = world
+
+shootBulletIfWeaponIsReloaded :: World -> World
+shootBulletIfWeaponIsReloaded world
+  | iteration' >= lastShotAtFrame weapon + reloadTime weapon = shootBullet world
+  | otherwise = world
+  where
+    iteration' = iteration world
+    playerSpaceship' = playerSpaceship (player world)
+    weapon = head (filter active (weapons playerSpaceship'))
 
 {- JSON STUFF -}
 instance ToJSON Score where
@@ -117,13 +126,17 @@ loadJSON :: IO (Either String [Score])
 loadJSON = eitherDecode <$> getJSON
 
 shootBullet :: World -> World
-shootBullet world = world {bullets = bullet' {bulletPositionInformation = spawnLocation} : bullets'}
+shootBullet world =
+  world
+    { player = (player world) {playerSpaceship = (playerSpaceship (player world)) {weapons = updatedWeapons}}
+    , bullets = updatedBullets
+    }
   where
     playerSpaceship' = playerSpaceship (player world)
     weapon = head (filter active (weapons playerSpaceship'))
-    bullet' = bullet weapon
-    bullets' = bullets world
     spawnLocation = determineBulletsPositionInformation playerSpaceship'
+    updatedBullets = (bullet weapon) {bulletPositionInformation = spawnLocation} : bullets world
+    updatedWeapons = weapon {lastShotAtFrame = iteration world} : filter (not . active) (weapons playerSpaceship')
 
 determineBulletsPositionInformation :: Spaceship -> PositionInformation
 determineBulletsPositionInformation playerSpaceship = PositionInformation location' destination
