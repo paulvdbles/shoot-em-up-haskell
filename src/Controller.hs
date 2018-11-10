@@ -15,6 +15,7 @@ step :: Float -> World -> IO World
 step secs world
   | state world == Playing =
     return $
+    addEnemies $
     updateBullets $
     checkIfPlayerPauses $
     checkIfPlayerShouldBeMoved $
@@ -63,3 +64,13 @@ removeDeadEnemies world = world {enemies = filter enemyIsDead (enemies world)}
 
 enemyIsDead :: Enemy -> Bool
 enemyIsDead enemy = health (enemySpaceship enemy) > 0
+
+addEnemies :: World -> World
+addEnemies world = world {enemies = enemies world ++ addEnemy spawns (iteration world)}
+  where
+    spawns = getSpawns (level world)
+    getSpawns (Level xs) = xs
+
+addEnemy :: [Spawn] -> Time -> [Enemy]
+addEnemy xs t = map (addEnemy' t) xs
+  where addEnemy' currentTime (Spawn (PlaceableSpaceship e) spawnTime) | currentTime == spawnTime = Enemy 10 10 e (-1)

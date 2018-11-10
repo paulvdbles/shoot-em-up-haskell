@@ -110,7 +110,7 @@ newtype Level =
 
 -- Contains the What, Where and When
 data Spawn =
-  Spawn Placeable Coordinate Time
+  Spawn Placeable Time
 
 type Time = Int
 
