@@ -72,11 +72,8 @@ addEnemies world = world {enemies = enemies world ++ addEnemy spawns (iteration 
     getSpawns (Level xs) = xs
 
 addEnemy :: [Spawn] -> Time -> [Enemy]
-addEnemy xs currentTime =
-  foldr
-    (\(Spawn (PlaceableSpaceship e) spawnTime) acc ->
-       if currentTime == spawnTime
-         then Enemy 10 10 e (-1) : acc
-         else acc)
-    []
-    xs
+addEnemy xs currentTime = foldr addEnemy' [] xs
+  where
+    addEnemy' (Spawn (PlaceableSpaceship e) spawnTime) acc
+      | currentTime == spawnTime = Enemy 10 10 e (-1) : acc
+      | otherwise = acc
