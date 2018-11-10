@@ -3,7 +3,6 @@
 module Controller where
 
 import           Model
-
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.IO.Game
 import           System.Exit
@@ -37,3 +36,5 @@ input event world =
         then exitSuccess -- sorry for this
         else return world
     _ -> return world
+
+
