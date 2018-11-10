@@ -9,6 +9,7 @@ view world
   | state world == Playing = return (pictures (drawPlayer (player world) : drawBullets world ++ drawEnemies world))
   | state world == Menu = do
     sc <- scores world
+    print $ show (iteration world)
     return (pictures ([drawPaused, drawPressEnter] ++ drawPlayerNames sc ++ drawPlayerScores sc))
   where
     scoreToPlayerName Score {playerName = playerName} = playerName

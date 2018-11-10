@@ -6,15 +6,16 @@ weapon = Weapon (Bullet 10 False initialPosition) True 0 10
 
 initialPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
 
+seconds :: Time -> Time
+seconds n = n * 60
+
 level =
   Level
-    [ Spawn
-        (PlaceableSpaceship (Spaceship 1 100 [weapon] (PositionInformation (Coordinate 0 300) (Coordinate 0 (-200)))))
-        0
+    [ Spawn (newSpaceShip 0 300) (seconds 1)
+    , Spawn (newSpaceShip 100 400) (seconds 2)
+    , Spawn (newSpaceShip (-100) 200) (seconds 3)
+    , Spawn (newSpaceShip 50 300) (seconds 4)
     ]
 
-newSpaceShip :: Float -> Float -> Spawn
-newSpaceShip x y =
-  Spawn
-    (PlaceableSpaceship (Spaceship 1 10 [weapon] (PositionInformation (Coordinate x y) (Coordinate 0 0))))
-    0
+newSpaceShip :: Float -> Float -> Placeable
+newSpaceShip x y = PlaceableSpaceship (Spaceship 1 100 [weapon] (PositionInformation (Coordinate x y) (Coordinate 0 0)))

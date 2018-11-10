@@ -66,7 +66,7 @@ enemyIsDead :: Enemy -> Bool
 enemyIsDead enemy = health (enemySpaceship enemy) > 0
 
 addEnemies :: World -> World
-addEnemies world = world {enemies = enemies world ++ addEnemy spawns (iteration world)}
+addEnemies world = world {enemies = enemies world ++ addEnemy spawns (iteration world), level = Level (removeSpawn spawns (iteration world))}
   where
     spawns = getSpawns (level world)
     getSpawns (Level xs) = xs
@@ -75,5 +75,13 @@ addEnemy :: [Spawn] -> Time -> [Enemy]
 addEnemy xs currentTime = foldr addEnemy' [] xs
   where
     addEnemy' (Spawn (PlaceableSpaceship e) spawnTime) acc
-      | currentTime == spawnTime = Enemy 10 10 e (-1) : acc
+      | currentTime >= spawnTime = Enemy 10 10 e (-1) : acc
       | otherwise = acc
+
+-- remove a spawn from the spawnlist when its time has gone by
+removeSpawn :: [Spawn] -> Time -> [Spawn]
+removeSpawn xs currentTime = foldr removeSpawn' [] xs
+  where
+    removeSpawn' (Spawn (PlaceableSpaceship e) spawnTime) acc
+      | currentTime > spawnTime = acc
+      | otherwise = Spawn (PlaceableSpaceship e) spawnTime : acc
