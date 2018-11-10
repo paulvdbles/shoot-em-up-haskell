@@ -1,6 +1,8 @@
 module Json where
 
 import Model (Score, Scores)
+import           Data.Aeson
+import qualified Data.ByteString.Lazy             as BS
 
 instance ToJSON Score where
   toEncoding = genericToEncoding defaultOptions
