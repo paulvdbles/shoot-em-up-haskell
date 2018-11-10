@@ -9,7 +9,7 @@ import           Graphics.Gloss.Interface.IO.Game
 
 initialPlayerPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
 
-pistol = Pistol (Bullet (DamagePoints 10) initialPlayerPosition) True 0 10
+pistol = Pistol (Bullet (DamagePoints 10) False initialPlayerPosition) True 0 10
 
 initialSpaceship = Spaceship 1 (HealthPoints 100) [pistol] initialPlayerPosition
 
