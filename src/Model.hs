@@ -25,6 +25,7 @@ data Enemy = Enemy
   { bounty               :: ScorePoints
   , enemyCollisionDamage :: DamagePoints
   , enemySpaceship       :: Spaceship
+  , lastHitAtIteration       :: Int
   }
 
 data Obstacle = Obstacle

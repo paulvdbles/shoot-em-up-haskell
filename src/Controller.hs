@@ -21,8 +21,6 @@ step secs world
     checkIfPlayerShouldShoot $ removeDeadEnemies $ removeHitBullets $ updateEnemiesForAllBullets $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
 
--- TODO: verwijder enemies met negatief HP
--- TODO: verwijder bullets met hit = true
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
 

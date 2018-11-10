@@ -31,7 +31,9 @@ calculateCoordinate player offsetX offsetY = Coordinate (oldX + offsetX) (oldY +
 
 movePlayer :: Player -> Coordinate -> Player
 movePlayer player newCoordinate =
-  player {playerSpaceship = (playerSpaceship player){spaceshipPositionInformation = updatedPositionInformation}}
+  if not (playerHitLevelBounds newCoordinate)
+    then player {playerSpaceship = (playerSpaceship player) {spaceshipPositionInformation = updatedPositionInformation}}
+    else player
   where
     updatedPositionInformation = (spaceshipPositionInformation (playerSpaceship player)) {location = newCoordinate}
 
@@ -52,3 +54,11 @@ moveBulletToDestination bullet = bullet {bulletPositionInformation = updatedPosi
     newLocation = Coordinate (x currentLocation) (y currentLocation + 10)
     destination' = destination (bulletPositionInformation bullet)
     updatedPositionInformation = PositionInformation newLocation destination'
+
+playerHitLevelBounds :: Coordinate -> Bool
+playerHitLevelBounds newLocation = leftBoundHit || rightBoundHit || lowerBoundHit || upperBoundHit
+  where
+    leftBoundHit = (-360 + 25) > x newLocation
+    rightBoundHit = (360 -25) < x newLocation
+    lowerBoundHit = (-480 + 40) > y newLocation
+    upperBoundHit = (480- 40) < y newLocation

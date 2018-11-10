@@ -25,7 +25,7 @@ initialKeyboard = Keyboard False False False False False False False
 testEnemyPosition = PositionInformation (Coordinate 0 300) (Coordinate 0 (-200))
 
 enemy :: Enemy
-enemy = Enemy 10 10 (Spaceship 1 100 [gun] testEnemyPosition)
+enemy = Enemy 10 10 (Spaceship 1 100 [gun] testEnemyPosition) (-1)
 
 initialState :: World
 initialState = World initialPlayer [enemy] [] [] emptyLevel mockCamera initialKeyboard 0 Playing readScoreFile
@@ -33,7 +33,7 @@ initialState = World initialPlayer [enemy] [] [] emptyLevel mockCamera initialKe
 main :: IO ()
 main =
   playIO
-    (InWindow "shoot-em-up-haskell" (720, 960) (0, 0))
+    (InWindow "shoot-em-up-haskell" (720, 960) (600, 0))
     black -- Background color
     60   -- Frames per second
     initialState -- Initial state
