@@ -36,29 +36,6 @@ determineBulletsPositionInformation playerSpaceship = PositionInformation locati
     destination = Coordinate (x playerLocation) (y playerLocation + 1250) -- Add +1250 so the bullet's destination is outside the screen
     playerLocation = location (spaceshipPositionInformation playerSpaceship)
 
---updateHitEnemies world = world {enemies = updatedEnemies}
---  where
---    updatedEnemies =
---      [ if checkIfBulletHitsEnemy a b
---        then b {enemySpaceship = (enemySpaceship b) {health = HealthPoints 0}}
---        else b
---      | a <- bullets'
---      , b <- enemies'
---      ]
---    enemies' = enemies world
---    bullets' = bullets world
---
---updateHitBullets world = world {bullets = updatedBullets}
---  where
---    updatedBullets =
---      [ if checkIfBulletHitsEnemy a b
---        then a {hit = True}
---        else a
---      | a <- bullets'
---      , b <- enemies'
---      ]
---    enemies' = enemies world
---    bullets' = bullets world
 updateEnemiesForAllBullets :: World -> World
 updateEnemiesForAllBullets world = world{bullets = updatedBullets, enemies = updatedEnemies}
   where
@@ -84,7 +61,7 @@ updateHitBullet enemies bullet
 checkIfBulletHitsEnemy :: Enemy -> Bullet -> Bool
 checkIfBulletHitsEnemy enemy bullet =
   (bulletXCoordinate >= enemyLeftBound && bulletXCoordinate <= enemyRightBound) &&
-  (bulletYCoordinate >= enemyLowerBound && bulletYCoordinate <= enemyUpperBound)
+  (bulletYCoordinate >= enemyLowerBound && bulletYCoordinate <= enemyUpperBound) && bulletIsFromPlayer
   where
     bulletXCoordinate = x (location (bulletPositionInformation bullet))
     bulletYCoordinate = y (location (bulletPositionInformation bullet))
@@ -92,3 +69,4 @@ checkIfBulletHitsEnemy enemy bullet =
     enemyRightBound = x (location (spaceshipPositionInformation (enemySpaceship enemy))) + 20
     enemyUpperBound = y (location (spaceshipPositionInformation (enemySpaceship enemy))) + 20
     enemyLowerBound = y (location (spaceshipPositionInformation (enemySpaceship enemy))) - 20
+    bulletIsFromPlayer = fromPlayer bullet

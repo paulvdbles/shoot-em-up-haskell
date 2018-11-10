@@ -83,13 +83,13 @@ reloadTimeSlow :: Int
 reloadTimeSlow = 5
 
 weaponNormal :: Weapon
-weaponNormal = Weapon (Bullet weaponDamageNormal hasBulletHit initialPosition) isWeaponActive 0 reloadTimeNormal
+weaponNormal = Weapon (StraightBullet weaponDamageNormal hasBulletHit initialPosition True) isWeaponActive 0 reloadTimeNormal
 
 weaponStrongSlow :: Weapon
-weaponStrongSlow = Weapon (Bullet weaponDamageStrong hasBulletHit initialPosition) isWeaponActive 0 reloadTimeSlow
+weaponStrongSlow = Weapon (StraightBullet weaponDamageStrong hasBulletHit initialPosition True) isWeaponActive 0 reloadTimeSlow
 
 weaponStrongFast :: Weapon
-weaponStrongFast = Weapon (Bullet weaponDamageStrong hasBulletHit initialPosition) isWeaponActive 0 reloadTimeFast
+weaponStrongFast = Weapon (StraightBullet weaponDamageStrong hasBulletHit initialPosition True) isWeaponActive 0 reloadTimeFast
 
 strongWeapon :: Float -> Float -> Placeable
 strongWeapon x y = PlaceableItem (WeaponItem weaponStrongSlow (Coordinate x y))

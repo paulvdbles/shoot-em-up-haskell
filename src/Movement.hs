@@ -47,18 +47,25 @@ bulletShouldBeKept :: Bullet -> Bool
 bulletShouldBeKept bullet =
   y (location (bulletPositionInformation bullet)) <= y (destination (bulletPositionInformation bullet))
 
+determineBulletMovement :: Bullet -> Bullet
+determineBulletMovement bullet@StraightBullet {} = moveBulletToDestination bullet
+determineBulletMovement bullet@AimedBullet {} = undefined
+
 moveBulletToDestination :: Bullet -> Bullet
 moveBulletToDestination bullet = bullet {bulletPositionInformation = updatedPositionInformation}
   where
     currentLocation = location (bulletPositionInformation bullet)
-    newLocation = Coordinate (x currentLocation) (y currentLocation + 10)
+    newLocation = Coordinate (x currentLocation) (y currentLocation + direction)
     destination' = destination (bulletPositionInformation bullet)
     updatedPositionInformation = PositionInformation newLocation destination'
+    direction
+      | fromPlayer bullet = 10
+      | otherwise = -10
 
 playerHitLevelBounds :: Coordinate -> Bool
 playerHitLevelBounds newLocation = leftBoundHit || rightBoundHit || lowerBoundHit || upperBoundHit
   where
     leftBoundHit = (-360 + 25) > x newLocation
-    rightBoundHit = (360 -25) < x newLocation
+    rightBoundHit = (360 - 25) < x newLocation
     lowerBoundHit = (-480 + 40) > y newLocation
-    upperBoundHit = (480- 40) < y newLocation
+    upperBoundHit = (480 - 40) < y newLocation

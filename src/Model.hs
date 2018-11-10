@@ -25,7 +25,8 @@ data Enemy = Enemy
   { bounty               :: ScorePoints
   , enemyCollisionDamage :: DamagePoints
   , enemySpaceship       :: Spaceship
-  , lastHitAtIteration       :: Int
+  , lastHitAtIteration   :: Int
+  , aims                 :: Bool
   }
 
 data Obstacle = Obstacle
@@ -40,7 +41,6 @@ data Item
                , weaponItemLocation :: Coordinate }
   | PowerUp { bonusHealth     :: HealthPoints
             , powerUpLocation :: Coordinate }
-  
 
 data Weapon = Weapon
   { bullet          :: Bullet
@@ -49,11 +49,17 @@ data Weapon = Weapon
   , reloadTime      :: Int
   }
 
-data Bullet = Bullet
-  { damage                    :: DamagePoints
-  , hit                       :: Bool
-  , bulletPositionInformation :: PositionInformation
-  }
+data Bullet
+  = StraightBullet { damage                    :: DamagePoints
+                   , hit                       :: Bool
+                   , bulletPositionInformation :: PositionInformation
+                   , fromPlayer                :: Bool }
+  | AimedBullet { damage                    :: DamagePoints
+                , hit                       :: Bool
+                , bulletPositionInformation :: PositionInformation
+                , sendAtFrame               :: Int
+                , vector                    :: (Int, Int)
+                , fromPlayer                :: Bool }
 
 data PositionInformation = PositionInformation
   { location    :: Coordinate
@@ -110,11 +116,11 @@ newtype Level =
 
 -- Contains the What, Where and When
 data Spawn =
-  Spawn Placeable Time
+  Spawn Placeable
+        Time
 
 type Time = Int
 
--- spawn moet bevatten: enemy, frame waarop enemy moet spawnen, spawn coordinaten
 data Placeable
   = PlaceableSpaceship Spaceship
   | PlaceableItem Item
@@ -123,7 +129,7 @@ data Placeable
 data Coordinate = Coordinate
   { x :: Float
   , y :: Float
-  }
+  } deriving (Show)
 
 class Locatable a where
   nextLocation :: a -> a

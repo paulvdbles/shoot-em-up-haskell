@@ -6,10 +6,11 @@ import           Graphics.Gloss.Interface.IO.Game
 import           Level.Levels
 import           Model
 import           View
+import           Enemy
 
 initialPlayerPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
 
-gun = Weapon (Bullet 10 False initialPlayerPosition) True 0 10
+gun = Weapon (StraightBullet 10 False initialPlayerPosition True) True 0 10
 
 initialSpaceship = Spaceship 1 100 [gun] initialPlayerPosition
 
@@ -23,7 +24,7 @@ initialKeyboard = Keyboard False False False False False False False
 testEnemyPosition = PositionInformation (Coordinate 0 300) (Coordinate 0 (-200))
 
 enemy :: Enemy
-enemy = Enemy 10 10 (Spaceship 1 100 [gun] testEnemyPosition) (-1)
+enemy = Enemy 10 10 (Spaceship 1 100 [gun] testEnemyPosition) 0 False
 
 initialState :: World
 initialState = World initialPlayer [] [] [] Level.Levels.level mockCamera initialKeyboard 0 Playing readScoreFile
