@@ -2,13 +2,13 @@
 --   in response to time and user input
 module Controller where
 
-import           Model
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.IO.Game
+import           Model
+import           Movement
+import           Shooting
 import           System.Exit
 import           System.Random
-import Movement
-import Shooting
 
 -- | Handle one iteration of the game
 step :: Float -> World -> IO World
@@ -48,24 +48,6 @@ input event world =
         else return world
     _ -> return world
 
-checkIfPlayerShouldBeMoved :: World -> World
-checkIfPlayerShouldBeMoved world
-  | upKey (keyboard world) = world {player = movePlayer (player world) (calculateUpCoordinate (player world))}
-  | downKey (keyboard world) = world {player = movePlayer (player world) (calculateDownCoordinate (player world))}
-  | leftKey (keyboard world) = world {player = movePlayer (player world) (calculateLeftCoordinate (player world))}
-  | rightKey (keyboard world) = world {player = movePlayer (player world) (calculateRightCoordinate (player world))}
-  | otherwise = world
-
-updateBullets :: World -> World
-updateBullets world = world {bullets = map moveBulletToDestination (removeOldBullets (bullets world))}
-
-removeOldBullets :: [Bullet] -> [Bullet]
-removeOldBullets = filter bulletShouldBeKept
-
-bulletShouldBeKept :: Bullet -> Bool
-bulletShouldBeKept bullet =
-  y (location (bulletPositionInformation bullet)) <= y (destination (bulletPositionInformation bullet))
-
 moveBulletToDestination :: Bullet -> Bullet
 moveBulletToDestination bullet = bullet {bulletPositionInformation = updatedPositionInformation}
   where
@@ -73,10 +55,3 @@ moveBulletToDestination bullet = bullet {bulletPositionInformation = updatedPosi
     newLocation = Coordinate (x currentLocation) (y currentLocation + 10)
     destination' = destination (bulletPositionInformation bullet)
     updatedPositionInformation = PositionInformation newLocation destination'
-
-calculateUpCoordinate :: Player -> Coordinate
-calculateUpCoordinate player = calculateCoordinate player 0 10
-
-calculateDownCoordinate :: Player -> Coordinate
-calculateDownCoordinate player = calculateCoordinate player 0 (-10)
-

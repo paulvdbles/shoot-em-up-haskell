@@ -9,7 +9,7 @@ import           Graphics.Gloss.Interface.IO.Game
 
 mockPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
 
-pistol = Pistol (Bullet (DamagePoints 10) mockPosition)
+pistol = Pistol (Bullet (DamagePoints 10) mockPosition) True 0 10
 
 initialSpaceship = Spaceship 1 (HealthPoints 100) [pistol] mockPosition
 
@@ -23,7 +23,10 @@ initialKeyboard :: Keyboard
 initialKeyboard = Keyboard False False False False False False
 
 initialState :: World
-initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard Playing loadJSON
+initialState = World initialPlayer [] [] [] emptyLevel mockCamera initialKeyboard 0 Playing loadJSON
+
+initialDisplay :: Display
+initialDisplay = InWindow "shoot-em-up-haskell" (720, 960) (0, 0)
 
 main :: IO ()
 main =
