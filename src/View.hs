@@ -8,26 +8,26 @@ view :: World -> IO Picture
 view world
   | state world == Playing = return (pictures (drawPlayer (player world) : drawBullets world))
   | state world == Menu = do
-    print "loading scores"
     sc <- scores world
-    print "scores loaded"
-    return (pictures [drawPlayer (player world), translate (-220) 350 $ color red (text "Paused")])
+    return
+      (pictures
+         ([ drawPlayer (player world)
+          , translate (-220) 350 $ color red (text "Paused")
+          , translate (-210) 320 $ scale 0.2 0.2 $ color orange (text "Press Enter to continue")
+          ] ++
+          [ translate x (fst ys) $ scale 0.2 0.2 $ color orange (text (snd ys))
+          | x <- [-220]
+          , ys <- zip [0,-25 .. -225] (map scoreToPlayerName (getEitherScore sc))
+          ] ++
+          [ translate x (fst ys) $ scale 0.2 0.2 $ color orange (text (snd ys))
+          | x <- [200]
+          , ys <- zip [0,-25 .. -225] (map scoreToPlayerScore (getEitherScore sc))
+          ]))
   where
-    getEither (Right s) = s
-    getEither (Left _) = [Score {playerName = "Cannot load scores                  ", playerScore = 0}]
-
---                           ++ [translate n m $ color red (text s) | m <- [100,100..], n <- [200,250..], s <- map scoreToString (getEither sc)]
-scoreToString :: Score -> String
-scoreToString Score {playerName = playerName, playerScore = playerScore} =
-  playerName ++ replicate getStringLength ' ' ++ ps'
-  where
-    getStringLength
-      | psl + pl > 10 = 10 - psl - pl
-      | otherwise = 1
-    ps' :: String
-    ps' = show playerScore
-    pl = length playerName
-    psl = length ps'
+    getEitherScore (Right s) = s
+    getEitherScore (Left err) = [Score {playerName = "Cannot load scores", playerScore = 0}]
+    scoreToPlayerName Score {playerName = playerName} = playerName
+    scoreToPlayerScore Score {playerScore = playerScore} = show playerScore
 
 drawPlayer :: Player -> Picture
 drawPlayer Player {playerSpaceship = spaceship} =
