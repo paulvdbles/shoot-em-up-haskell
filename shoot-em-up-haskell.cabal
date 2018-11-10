@@ -29,6 +29,8 @@ library
       Controller
     , Model
     , View
+    , Shooting
+    , Movement
   other-modules:
       Paths_shoot_em_up_haskell
   hs-source-dirs:
