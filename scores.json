@@ -1,42 +1,42 @@
 [
   {
     "playerName": "David",
-    "playerScore": 1100
+    "playerScore": 1100.0
   },
   {
     "playerName": "Paul",
-    "playerScore": 1042
+    "playerScore": 1042.0
   },
   {
     "playerName": "Dank Pronk",
-    "playerScore": 999
+    "playerScore": 999.0
   },
   {
     "playerName": "player4",
-    "playerScore": 0
+    "playerScore": 0.0
   },
   {
     "playerName": "player5",
-    "playerScore": 0
+    "playerScore": 0.0
   },
   {
     "playerName": "player6",
-    "playerScore": 0
+    "playerScore": 0.0
   },
   {
     "playerName": "player7",
-    "playerScore": 0
+    "playerScore": 0.0
   },
   {
     "playerName": "player8",
-    "playerScore": 0
+    "playerScore": 0.0
   },
   {
     "playerName": "player9",
-    "playerScore": 0
+    "playerScore": 0.0
   },
   {
     "playerName": "player10",
-    "playerScore": 0
+    "playerScore": 0.0
   }
 ]

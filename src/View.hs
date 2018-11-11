@@ -22,6 +22,7 @@ view world
     return $ pictures [drawPlayerScore, drawPlayerName "Name: ", drawGameOverMessage]
   | state world == AskForUsername = return $ pictures [drawAskForUsernameMessage, drawPlayerName "username: "]
   | state world == Quitting = return drawQuitMessage
+  | state world == GameDone = return drawNothing
   | otherwise = return drawQuitMessage
   where
     scoreToPlayerName Score {playerName = playerName} = playerName
@@ -46,6 +47,7 @@ view world
       translate (-300) 150 $ scale 0.2 0.2 $ color red $ text $ pretext ++ username (player world)
     drawPlayerScore = translate (-300) 100 $ scale 0.2 0.2 $ color red $ text $ "Score: " ++ show (score $ player world)
     drawQuitMessage = translate (-300) 200 $ scale 0.3 0.3 $ color red $ text "You may now quit the game"
+    drawNothing = translate (-300) 200 $ text ""
     drawAskForUsernameMessage = translate (-300) 200 $ scale 0.3 0.3 $ color red $ text "Please insert your username"
 
 drawPlayer :: Int -> Player -> Picture
