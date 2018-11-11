@@ -1,6 +1,6 @@
 # shoot-em-up-haskell
 
-<img src="https://i.imgur.com/ByElTY2.png" alt="Screenshot"
+<img src="https://i.imgur.com/ByElTY2.png" alt="Screenshot">
 
 # Building the project with Stack
 
