@@ -76,6 +76,7 @@ data State
   | Playing
   | GameOver
   | GameWin
+  | GameDone
   | Quitting
   deriving (Eq)
 
@@ -153,5 +154,5 @@ newtype Scores = Scores
 -- [Score {playerName = "David", playerScore = 1100},Score {playerName = "Paul", playerScore = 1042},Score {playerName = "Dank Pronk", playerScore = 999},Score {playerName = "player4", playerScore = 0},Score {playerName = "player5", playerScore = 0},Score {playerName = "player6", playerScore = 0},Score {playerName = "player7", playerScore = 0},Score {playerName = "player8", playerScore = 0},Score {playerName = "player9", playerScore = 0},Score {playerName = "player10", playerScore = 0}]
 data Score = Score
   { playerName  :: String
-  , playerScore :: Int
+  , playerScore :: ScorePoints
   } deriving (Generic, Show)

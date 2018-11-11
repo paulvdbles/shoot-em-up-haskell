@@ -1,6 +1,8 @@
 module Controller where
 
+import           Data.List
 import           Enemy
+import           FileSystem
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.IO.Game
 import           Model
@@ -14,26 +16,49 @@ step :: Float -> World -> IO World
 step secs world
   | state world == Playing =
     return $
-      addEnemies $
-        updateBullets $
-          checkIfPlayerPauses $
-            checkIfPlayerShouldBeMoved $
-              updateShootingEnemies $
-                checkIfPlayerShouldShoot $
-                  removeDeadEnemies $
-                    removeHitBullets $
-                      updatePlayerForAllEnemyBullets $
-                        updateEnemiesForAllBullets $
-                          checkIfLevelDone $ checkIfPlayerDied $ updateIteration world
+    addEnemies $
+    updateBullets $
+    checkIfPlayerPauses $
+    checkIfPlayerShouldBeMoved $
+    updateShootingEnemies $
+    checkIfPlayerShouldShoot $
+    removeDeadEnemies $
+    removeHitBullets $
+    updatePlayerForAllEnemyBullets $
+    updateEnemiesForAllBullets $ checkIfLevelDone $ checkIfPlayerDied $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
   | state world == GameWin = return $ checkIfPlayerPauses world
   | state world == GameOver = return $ checkIfPlayerPauses world
-  | state world == AskForUsername =
-    return $ checkIfPlayerPauses world
+  | state world == AskForUsername = return $ checkIfPlayerPauses world
+  | state world == GameDone = newScoreList world
   | state world == Quitting = return world
 
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
+
+-- appends new score to the current list, only keep the top 10 and sort it by score
+newScoreList :: World -> IO World
+newScoreList world =
+  do sc <- scores world
+     writeScoreFile (newScores sc)
+     return $ world {scores = return (newScores sc), state = checkState}
+  where
+    player' = player world
+    playerName' = username player'
+    playerScore' = score player'
+    playerHealth = health (playerSpaceship player')
+    checkState
+      | playerHealth <= 0 = GameOver
+      | otherwise = GameWin
+    newScores sc =
+            take
+              10
+              (sortBy
+                 (\(Score p1 s1) (Score p2 s2) ->
+                    if s1 > s2
+                      then GT
+                      else LT)
+                 (Score playerName' playerScore' : sc))
 
 -- TODO check if we need to add extra LOC to go from GameOver/GameWin state to Menu or something
 checkIfPlayerPauses :: World -> World
@@ -49,12 +74,12 @@ checkIfPlayerPauses world
 --  add an input window for the username
 checkIfLevelDone :: World -> World
 checkIfLevelDone world
-  | levelTime - (iteration world `div` 60) <= 0 = world {state = GameWin}
+  | levelTime - (iteration world `div` 60) <= 0 = world {state = GameDone}
   | otherwise = world
 
 checkIfPlayerDied :: World -> World
 checkIfPlayerDied world
-  | health (playerSpaceship (player world)) <= 0 = world {state = GameOver}
+  | health (playerSpaceship (player world)) <= 0 = world {state = GameDone}
   | otherwise = world
 
 -- | Handle user input

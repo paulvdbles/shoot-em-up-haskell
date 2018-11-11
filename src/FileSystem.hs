@@ -15,8 +15,8 @@ getFile = BS.readFile
 scoreFile :: FilePath
 scoreFile = "scores.json"
 
-writeScoreFile :: Scores -> IO ()
-writeScoreFile s = BS.writeFile scoreFile (encode (unScore s))
+writeScoreFile :: [Score] -> IO ()
+writeScoreFile s = BS.writeFile scoreFile (encode s)
 
 readScoreFile :: IO [Score]
 readScoreFile = do
