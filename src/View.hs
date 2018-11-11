@@ -7,28 +7,29 @@ import           Model
 view :: World -> IO Picture
 view world
   | state world == Playing =
-    return
-      (pictures
-         (drawPlayer (iteration world) (player world) :
-          drawHealth (player world) : drawTime : drawScore : drawBullets world ++ drawEnemies world))
+    return $
+    pictures $
+    drawPlayer (iteration world) (player world) :
+    drawHealth (player world) : drawTime : drawScore : drawBullets world ++ drawEnemies world
   | state world == Menu = do
     sc <- scores world
-    return (pictures (drawPaused : drawPressEnter : (drawPlayerNames sc ++ drawPlayerScores sc)))
+    return $ pictures (drawPaused : drawPressEnter : (drawPlayerNames sc ++ drawPlayerScores sc))
   | state world == GameWin = do
     sc <- scores world
-    pn <- username (player world)
-    return (pictures [drawPlayerScore, drawPlayerName pn, drawGameWinMessage])
+    return $ pictures [drawPlayerScore, drawPlayerName "Name: ", drawGameWinMessage]
   | state world == GameOver = do
     sc <- scores world
-    pn <- username (player world)
-    return (pictures [drawPlayerScore, drawPlayerName pn, drawGameOverMessage])
+    return $ pictures [drawPlayerScore, drawPlayerName "Name: ", drawGameOverMessage]
+  | state world == AskForUsername = return $ pictures [drawAskForUsernameMessage, drawPlayerName "username: "]
+  | state world == Quitting = return drawQuitMessage
+  | otherwise = return drawQuitMessage
   where
     scoreToPlayerName Score {playerName = playerName} = playerName
     scoreToPlayerScore Score {playerScore = playerScore} = show playerScore
-    drawPaused = translate (-220) 350 $ color red (text "Paused")
+    drawPaused = translate (-220) 350 $ color red $ text "Paused"
     drawPressEnter = translate (-210) 320 $ scale 0.2 0.2 $ color orange $ text "Press Enter to continue"
     drawTime = translate 300 450 $ scale 0.2 0.2 $ color red $ text $ show $ levelTime - (iteration world `div` 60)
-    drawScore = translate 300 420 $ scale 0.2 0.2 $ color red $ text $ show $ score (player world)
+    drawScore = translate 300 420 $ scale 0.2 0.2 $ color red $ text $ show $ score $ player world
     drawPlayerNames sc =
       [ translate x (fst ys) $ scale 0.2 0.2 $ color orange $ text $ snd ys
       | x <- [-220]
@@ -39,11 +40,13 @@ view world
       | x <- [200]
       , ys <- zip [0,-25 .. -225] (map scoreToPlayerScore sc)
       ]
-    drawPlayerScore = translate (-50) 200 $ scale 0.2 0.2 $ color red $ text $ "Score: " ++ show (score $ player world)
-    drawPlayerName pn =
-      translate (-50) 150 $ scale 0.2 0.2 $ color red $ text $ "Score: " ++ show pn
-    drawGameWinMessage = translate (-200) 200 $ scale 0.5 0.5 $ color red $ text "Winner winner!"
+    drawGameWinMessage = translate (-300) 200 $ scale 0.5 0.5 $ color red $ text "Winner winner!"
     drawGameOverMessage = translate (-300) 200 $ scale 0.4 0.4 $ color red $ text "Better luck next time!"
+    drawPlayerName pretext =
+      translate (-300) 150 $ scale 0.2 0.2 $ color red $ text $ pretext ++ username (player world)
+    drawPlayerScore = translate (-300) 100 $ scale 0.2 0.2 $ color red $ text $ "Score: " ++ show (score $ player world)
+    drawQuitMessage = translate (-300) 200 $ scale 0.3 0.3 $ color red $ text "You may now quit the game"
+    drawAskForUsernameMessage = translate (-300) 200 $ scale 0.3 0.3 $ color red $ text "Please insert your username"
 
 drawPlayer :: Int -> Player -> Picture
 drawPlayer currentIteration Player {playerSpaceship = spaceship} =

@@ -9,7 +9,7 @@ import           Level.Weapons
 seconds :: Time -> Time
 seconds n = n * 60
 
-level =
+startingLevel =
   Level
     [ Spawn (defaultEnemy 0 300) (seconds 1)
     , Spawn (defaultEnemy 100 400) (seconds 2)

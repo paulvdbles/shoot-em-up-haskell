@@ -7,7 +7,6 @@ import           Level.Levels
 import           Model
 import           View
 import           Enemy
-import           Data.Text
 
 initialPlayerPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 (-200))
 
@@ -15,7 +14,7 @@ gun = Weapon (StraightBullet 10 False initialPlayerPosition True) True 0 10
 
 initialSpaceship = Spaceship 1 100 [gun] initialPlayerPosition 0
 
-initialPlayer = Player initialSpaceship 0 0 0 (return "player")
+initialPlayer = Player initialSpaceship 0 0 0 ""
 
 mockCamera = Camera (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0)
 
@@ -28,9 +27,7 @@ enemy :: Enemy
 enemy = Enemy 10 10 (Spaceship 1 100 [gun] testEnemyPosition 0) False 0
 
 initialState :: World
-initialState = World initialPlayer [] [] [] Level.Levels.level mockCamera initialKeyboard 0 Playing readScoreFile
--- TODO laat Paul dit fixen - Ik krijg weer geen error :/
---initialState = World initialPlayer [] [] [] Level.Levels.level mockCamera initialKeyboard 0 AskForUsername readScoreFile
+initialState = World initialPlayer [] [] [] Level.Levels.startingLevel mockCamera initialKeyboard 0 AskForUsername readScoreFile
 
 main :: IO ()
 main =

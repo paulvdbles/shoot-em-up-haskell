@@ -1,13 +1,8 @@
--- | This module defines how the state changes
---   in response to time and user input
 module Controller where
 
-import           Data.Text                        hiding (filter, foldr)
-import           Data.Text.Internal               (showText)
 import           Enemy
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.IO.Game
-import           Graphics.UI.TinyFileDialogs
 import           Model
 import           Movement
 import           Shooting
@@ -19,32 +14,23 @@ step :: Float -> World -> IO World
 step secs world
   | state world == Playing =
     return $
-    addEnemies $
-    updateBullets $
-    checkIfPlayerPauses $
-    checkIfPlayerShouldBeMoved $
-    updateShootingEnemies $
-    checkIfPlayerShouldShoot $
-    removeDeadEnemies $
-    removeHitBullets $
-    updatePlayerForAllEnemyBullets $ updateEnemiesForAllBullets $ checkIfLevelDone $ checkIfPlayerDied $ updateIteration world
+      addEnemies $
+        updateBullets $
+          checkIfPlayerPauses $
+            checkIfPlayerShouldBeMoved $
+              updateShootingEnemies $
+                checkIfPlayerShouldShoot $
+                  removeDeadEnemies $
+                    removeHitBullets $
+                      updatePlayerForAllEnemyBullets $
+                        updateEnemiesForAllBullets $
+                          checkIfLevelDone $ checkIfPlayerDied $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
   | state world == GameWin = return $ checkIfPlayerPauses world
   | state world == GameOver = return $ checkIfPlayerPauses world
-  | state world == AskForUsername = return $ world {player = player', state = Playing}
-  where
-    player' = (player world) {username = getUsername}
-
-getUsername :: IO String
-getUsername = do
-        text <- inputBox (pack "title") (pack "message") (Just (pack "username"))
-        return $ textToString $ maybeText text
-
-textToString t = Data.Text.head t : textToString t
-
-maybeText :: Maybe Text -> Text
-maybeText (Just s) = s
-maybeText Nothing = pack ""
+  | state world == AskForUsername =
+    return $ checkIfPlayerPauses world
+  | state world == Quitting = return world
 
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
@@ -54,8 +40,10 @@ checkIfPlayerPauses :: World -> World
 checkIfPlayerPauses world
   | pauseKey (keyboard world) && state world == Playing = world {state = Menu}
   | enterKey (keyboard world) && state world == Menu = world {state = Playing}
-  | enterKey (keyboard world) && state world == GameWin = world {state = Quitting} --  TODO add winner input box?
-  | enterKey (keyboard world) && state world == GameOver = world {state = Quitting} --  TODO add winner input box?
+  | enterKey (keyboard world) && state world == GameWin = world {state = Quitting}
+  | enterKey (keyboard world) && state world == GameOver = world {state = Quitting}
+  | enterKey (keyboard world) && state world == AskForUsername = world {state = Playing} --  TODO add winner input box?
+  | enterKey (keyboard world) && state world == AskForUsername = world {state = Playing} --  TODO add winner input box?
   | otherwise = world
 
 --  add an input window for the username
@@ -73,20 +61,21 @@ checkIfPlayerDied world
 input :: Event -> World -> IO World
 input event world =
   case event of
-    EventKey (SpecialKey KeyUp) Down _ _ -> return (world {keyboard = (keyboard world) {upKey = True}})
-    EventKey (SpecialKey KeyUp) Up _ _ -> return (world {keyboard = (keyboard world) {upKey = False}})
-    EventKey (SpecialKey KeyDown) Down _ _ -> return (world {keyboard = (keyboard world) {downKey = True}})
-    EventKey (SpecialKey KeyDown) Up _ _ -> return (world {keyboard = (keyboard world) {downKey = False}})
-    EventKey (SpecialKey KeyLeft) Down _ _ -> return (world {keyboard = (keyboard world) {leftKey = True}})
-    EventKey (SpecialKey KeyLeft) Up _ _ -> return (world {keyboard = (keyboard world) {leftKey = False}})
-    EventKey (SpecialKey KeyRight) Down _ _ -> return (world {keyboard = (keyboard world) {rightKey = True}})
-    EventKey (SpecialKey KeyRight) Up _ _ -> return (world {keyboard = (keyboard world) {rightKey = False}})
-    EventKey (Char 'z') Down _ _ -> return (world {keyboard = (keyboard world) {shootKey = True}})
-    EventKey (Char 'z') Up _ _ -> return (world {keyboard = (keyboard world) {shootKey = False}})
-    EventKey (SpecialKey KeyEsc) Down _ _ -> return (world {keyboard = (keyboard world) {pauseKey = True}})
-    EventKey (SpecialKey KeyEsc) Up _ _ -> return (world {keyboard = (keyboard world) {pauseKey = False}})
-    EventKey (SpecialKey KeyEnter) Down _ _ -> return (world {keyboard = (keyboard world) {enterKey = True}})
-    EventKey (SpecialKey KeyEnter) Up _ _ -> return (world {keyboard = (keyboard world) {enterKey = False}})
+    EventKey (SpecialKey KeyUp) Down _ _ -> return $ world {keyboard = (keyboard world) {upKey = True}}
+    EventKey (SpecialKey KeyUp) Up _ _ -> return $ world {keyboard = (keyboard world) {upKey = False}}
+    EventKey (SpecialKey KeyDown) Down _ _ -> return $ world {keyboard = (keyboard world) {downKey = True}}
+    EventKey (SpecialKey KeyDown) Up _ _ -> return $ world {keyboard = (keyboard world) {downKey = False}}
+    EventKey (SpecialKey KeyLeft) Down _ _ -> return $ world {keyboard = (keyboard world) {leftKey = True}}
+    EventKey (SpecialKey KeyLeft) Up _ _ -> return $ world {keyboard = (keyboard world) {leftKey = False}}
+    EventKey (SpecialKey KeyRight) Down _ _ -> return $ world {keyboard = (keyboard world) {rightKey = True}}
+    EventKey (SpecialKey KeyRight) Up _ _ -> return $ world {keyboard = (keyboard world) {rightKey = False}}
+    EventKey (Char 'z') Down _ _ -> return $ world {keyboard = (keyboard world) {shootKey = True}}
+    EventKey (Char 'z') Up _ _ -> return $ world {keyboard = (keyboard world) {shootKey = False}}
+    EventKey (SpecialKey KeyEsc) Down _ _ -> return $ world {keyboard = (keyboard world) {pauseKey = True}}
+    EventKey (SpecialKey KeyEsc) Up _ _ -> return $ world {keyboard = (keyboard world) {pauseKey = False}}
+    EventKey (SpecialKey KeyEnter) Down _ _ -> return $ world {keyboard = (keyboard world) {enterKey = True}}
+    EventKey (SpecialKey KeyEnter) Up _ _ -> return $ world {keyboard = (keyboard world) {enterKey = False}}
+    EventKey (Char c) Down _ _ -> return $ world {player = (player world) {username = username (player world) ++ [c]}}
     EventResize newSize ->
       if newSize /= (720, 960)
         then exitSuccess -- sorry for this

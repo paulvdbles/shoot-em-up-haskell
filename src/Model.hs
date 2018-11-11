@@ -4,7 +4,6 @@ module Model where
 
 import           GHC.Generics
 import           Graphics.Gloss
-import           Data.Text
 
 -- the time a level may take
 levelTime :: Int
@@ -23,7 +22,7 @@ data Player = Player
   , score           :: ScorePoints
   , comboMultiplier :: Int
   , comboTime       :: Seconds
-  , username        :: IO String
+  , username        :: String
   }
 
 data Enemy = Enemy
