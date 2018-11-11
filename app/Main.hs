@@ -15,7 +15,7 @@ gun = Weapon (StraightBullet 10 False initialPlayerPosition True) True 0 10
 
 initialSpaceship = Spaceship 1 100 [gun] initialPlayerPosition 0
 
-initialPlayer = Player initialSpaceship 0 0 0 (return $ Just $ pack "")
+initialPlayer = Player initialSpaceship 0 0 0 (return "player")
 
 mockCamera = Camera (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0) (Coordinate 0 0)
 

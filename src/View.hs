@@ -16,7 +16,12 @@ view world
     return (pictures (drawPaused : drawPressEnter : (drawPlayerNames sc ++ drawPlayerScores sc)))
   | state world == GameWin = do
     sc <- scores world
-    return (pictures [drawWinScore, drawWinMessage])
+    pn <- username (player world)
+    return (pictures [drawPlayerScore, drawPlayerName pn, drawGameWinMessage])
+  | state world == GameOver = do
+    sc <- scores world
+    pn <- username (player world)
+    return (pictures [drawPlayerScore, drawPlayerName pn, drawGameOverMessage])
   where
     scoreToPlayerName Score {playerName = playerName} = playerName
     scoreToPlayerScore Score {playerScore = playerScore} = show playerScore
@@ -34,17 +39,21 @@ view world
       | x <- [200]
       , ys <- zip [0,-25 .. -225] (map scoreToPlayerScore sc)
       ]
-    drawWinScore = translate (-50) 150 $ scale 0.2 0.2 $ color red $ text $ "Score: " ++ show (score $ player world)
-    drawWinMessage = translate (-200) 200 $ scale 0.5 0.5 $ color red $ text "Winner winner!"
+    drawPlayerScore = translate (-50) 200 $ scale 0.2 0.2 $ color red $ text $ "Score: " ++ show (score $ player world)
+    drawPlayerName pn =
+      translate (-50) 150 $ scale 0.2 0.2 $ color red $ text $ "Score: " ++ show pn
+    drawGameWinMessage = translate (-200) 200 $ scale 0.5 0.5 $ color red $ text "Winner winner!"
+    drawGameOverMessage = translate (-300) 200 $ scale 0.4 0.4 $ color red $ text "Better luck next time!"
 
 drawPlayer :: Int -> Player -> Picture
 drawPlayer currentIteration Player {playerSpaceship = spaceship} =
   translate (x playerPosition) (y playerPosition) $ playerColour $ rectangleSolid 50 80
   where
     playerPosition = location (spaceshipPositionInformation spaceship)
-    playerColour = if lastHitAtIteration spaceship > currentIteration - 5
-                              then color red -- make the enemy red for a few iterations
-                              else color (light blue)
+    playerColour =
+      if lastHitAtIteration spaceship > currentIteration - 5
+        then color red -- make the enemy red for a few iterations
+        else color (light blue)
 
 drawBullets :: World -> [Picture]
 drawBullets world = map drawBullet (bullets world)
@@ -59,11 +68,14 @@ drawEnemies world = map (drawEnemy (iteration world)) (enemies world)
 
 drawEnemy :: Int -> Enemy -> Picture
 drawEnemy currentIteration enemy = translate (x enemyPosition) (y enemyPosition) $ enemyColour $ rectangleSolid 40 40
-  where enemyPosition = location (spaceshipPositionInformation (enemySpaceship enemy))
-        enemyColour = if lastHitAtIteration (enemySpaceship enemy) > currentIteration - 5
-                          then color red -- make the enemy red for a few iterations
-                          else color azure
+  where
+    enemyPosition = location (spaceshipPositionInformation (enemySpaceship enemy))
+    enemyColour =
+      if lastHitAtIteration (enemySpaceship enemy) > currentIteration - 5
+        then color red -- make the enemy red for a few iterations
+        else color azure
 
 drawHealth :: Player -> Picture
 drawHealth player = translate (-360) 460 $ color red $ rectangleSolid health' 30
-  where health' = health(playerSpaceship player)* 2
+  where
+    health' = health (playerSpaceship player) * 2

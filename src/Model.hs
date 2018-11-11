@@ -1,12 +1,11 @@
 {-# LANGUAGE DeriveGeneric #-}
 
--- | This module contains the data types
---   which represent the state of the game
 module Model where
 
 import           GHC.Generics
 import           Graphics.Gloss
 import           Data.Text
+
 -- the time a level may take
 levelTime :: Int
 levelTime = 60
@@ -24,7 +23,7 @@ data Player = Player
   , score           :: ScorePoints
   , comboMultiplier :: Int
   , comboTime       :: Seconds
-  , username        :: IO (Maybe Text)
+  , username        :: IO String
   }
 
 data Enemy = Enemy

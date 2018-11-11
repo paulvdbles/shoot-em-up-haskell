@@ -27,16 +27,24 @@ step secs world
     checkIfPlayerShouldShoot $
     removeDeadEnemies $
     removeHitBullets $
-    updatePlayerForAllEnemyBullets $ updateEnemiesForAllBullets $ checkIfLevelDone $ updateIteration world
+    updatePlayerForAllEnemyBullets $ updateEnemiesForAllBullets $ checkIfLevelDone $ checkIfPlayerDied $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
   | state world == GameWin = return $ checkIfPlayerPauses world
+  | state world == GameOver = return $ checkIfPlayerPauses world
   | state world == AskForUsername = return $ world {player = player', state = Playing}
   where
-    player' = (player world) {username = inputBox (pack "title") (pack "message") (Just (pack "username"))}
+    player' = (player world) {username = getUsername}
 
---checkUsername :: Monad m => m (Maybe Text) -> m Text
---checkUsername Nothing = return "Something went wrong - did you insert your name?"
---checkUsername (Just t) = return t
+getUsername :: IO String
+getUsername = do
+        text <- inputBox (pack "title") (pack "message") (Just (pack "username"))
+        return $ textToString $ maybeText text
+
+textToString t = Data.Text.head t : textToString t
+
+maybeText :: Maybe Text -> Text
+maybeText (Just s) = s
+maybeText Nothing = pack ""
 
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
@@ -47,12 +55,18 @@ checkIfPlayerPauses world
   | pauseKey (keyboard world) && state world == Playing = world {state = Menu}
   | enterKey (keyboard world) && state world == Menu = world {state = Playing}
   | enterKey (keyboard world) && state world == GameWin = world {state = Quitting} --  TODO add winner input box?
+  | enterKey (keyboard world) && state world == GameOver = world {state = Quitting} --  TODO add winner input box?
   | otherwise = world
 
 --  add an input window for the username
 checkIfLevelDone :: World -> World
 checkIfLevelDone world
   | levelTime - (iteration world `div` 60) <= 0 = world {state = GameWin}
+  | otherwise = world
+
+checkIfPlayerDied :: World -> World
+checkIfPlayerDied world
+  | health (playerSpaceship (player world)) <= 0 = world {state = GameOver}
   | otherwise = world
 
 -- | Handle user input

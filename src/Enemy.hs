@@ -35,15 +35,15 @@ shootAimedBulletToPlayer enemy player =
   StraightBullet
     10
     False
-    (PositionInformation (Coordinate (x enemyLocation) (y enemyLocation - 55)) (Coordinate 0 0))
+    (PositionInformation (Coordinate (x enemyLocation) (y enemyLocation - 55)) vector)
     False
   where
     vector = bulletVector enemyLocation playerLocation
     enemyLocation = location (spaceshipPositionInformation (enemySpaceship enemy))
     playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
 
-bulletVector :: Coordinate -> Coordinate -> (Float, Float)
-bulletVector source destination = (x destination - x source, y destination - y source)
+bulletVector :: Coordinate -> Coordinate -> Coordinate
+bulletVector source destination = Coordinate (x destination - x source) (y destination - y source)
 
 shootStraightBulletToPlayer :: Enemy -> Bullet
 shootStraightBulletToPlayer enemy =
