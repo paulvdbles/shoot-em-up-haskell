@@ -40,6 +40,23 @@ movePlayer player newCoordinate =
 updateBullets :: World -> World
 updateBullets world = world {bullets = map moveBullet (removeOldBullets (bullets world))}
 
+moveEnemies :: World -> World
+moveEnemies world = world{enemies = moved}
+  where moved = map moveEnemy (enemies world)
+
+moveEnemy :: Enemy -> Enemy
+moveEnemy enemy =
+  enemy
+    { enemySpaceship =
+        (enemySpaceship enemy)
+          { spaceshipPositionInformation =
+              (spaceshipPositionInformation (enemySpaceship enemy)) {location = newLocation}
+          }
+    }
+  where
+    currentLocation = location (spaceshipPositionInformation (enemySpaceship enemy))
+    newLocation = Coordinate (x currentLocation) (y currentLocation - 1)
+
 removeOldBullets :: [Bullet] -> [Bullet]
 removeOldBullets = filter (not . bulletIsOutsideBounds)
 
@@ -54,7 +71,7 @@ bulletIsOutsideBounds bullet = outsideLeftBound || outsideRightBound || outsideL
 
 moveBullet :: Bullet -> Bullet
 moveBullet bullet@StraightBullet {} = moveBulletStraight bullet
-moveBullet bullet@AimedBullet {} = moveBulletAimed bullet
+moveBullet bullet@AimedBullet {}    = moveBulletAimed bullet
 
 moveBulletStraight :: Bullet -> Bullet
 moveBulletStraight bullet =
