@@ -20,8 +20,6 @@ data Spaceship = Spaceship
 data Player = Player
   { playerSpaceship :: Spaceship
   , score           :: ScorePoints
-  , comboMultiplier :: Int
-  , comboTime       :: Seconds
   , username        :: String
   }
 
