@@ -2,9 +2,12 @@
 --   in response to time and user input
 module Controller where
 
+import           Data.Text                        hiding (filter, foldr)
+import           Data.Text.Internal               (showText)
 import           Enemy
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.IO.Game
+import           Graphics.UI.TinyFileDialogs
 import           Model
 import           Movement
 import           Shooting
@@ -23,8 +26,17 @@ step secs world
     updateShootingEnemies $
     checkIfPlayerShouldShoot $
     removeDeadEnemies $
-    removeHitBullets $ updatePlayerForAllEnemyBullets $ updateEnemiesForAllBullets $ updateIteration world
+    removeHitBullets $
+    updatePlayerForAllEnemyBullets $ updateEnemiesForAllBullets $ checkIfLevelDone $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
+  | state world == GameWin = return $ checkIfPlayerPauses world
+  | state world == AskForUsername = return $ world {player = player', state = Playing}
+  where
+    player' = (player world) {username = inputBox (pack "title") (pack "message") (Just (pack "username"))}
+
+--checkUsername :: Monad m => m (Maybe Text) -> m Text
+--checkUsername Nothing = return "Something went wrong - did you insert your name?"
+--checkUsername (Just t) = return t
 
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
@@ -34,6 +46,13 @@ checkIfPlayerPauses :: World -> World
 checkIfPlayerPauses world
   | pauseKey (keyboard world) && state world == Playing = world {state = Menu}
   | enterKey (keyboard world) && state world == Menu = world {state = Playing}
+  | enterKey (keyboard world) && state world == GameWin = world {state = Quitting} --  TODO add winner input box?
+  | otherwise = world
+
+--  add an input window for the username
+checkIfLevelDone :: World -> World
+checkIfLevelDone world
+  | levelTime - (iteration world `div` 60) <= 0 = world {state = GameWin}
   | otherwise = world
 
 -- | Handle user input
@@ -64,8 +83,7 @@ removeHitBullets :: World -> World
 removeHitBullets world = world {bullets = filter (not . hit) (bullets world)}
 
 removeDeadEnemies :: World -> World
-removeDeadEnemies world = world {enemies = filter enemyIsDead (enemies world)}
-
+removeDeadEnemies world = world {enemies = filter (\enemy -> health (enemySpaceship enemy) > 0) (enemies world)}
 
 addEnemies :: World -> World
 addEnemies world =

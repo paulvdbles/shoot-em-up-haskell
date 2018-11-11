@@ -13,7 +13,10 @@ view world
           drawHealth (player world) : drawTime : drawScore : drawBullets world ++ drawEnemies world))
   | state world == Menu = do
     sc <- scores world
-    return (pictures ([drawPaused, drawPressEnter] ++ drawPlayerNames sc ++ drawPlayerScores sc))
+    return (pictures (drawPaused : drawPressEnter : (drawPlayerNames sc ++ drawPlayerScores sc)))
+  | state world == GameWin = do
+    sc <- scores world
+    return (pictures [drawWinScore, drawWinMessage])
   where
     scoreToPlayerName Score {playerName = playerName} = playerName
     scoreToPlayerScore Score {playerScore = playerScore} = show playerScore
@@ -22,15 +25,17 @@ view world
     drawTime = translate 300 450 $ scale 0.2 0.2 $ color red $ text $ show $ levelTime - (iteration world `div` 60)
     drawScore = translate 300 420 $ scale 0.2 0.2 $ color red $ text $ show $ score (player world)
     drawPlayerNames sc =
-      [ translate x (fst ys) $ scale 0.2 0.2 $ color orange (text (snd ys))
+      [ translate x (fst ys) $ scale 0.2 0.2 $ color orange $ text $ snd ys
       | x <- [-220]
       , ys <- zip [0,-25 .. -225] (map scoreToPlayerName sc)
       ]
     drawPlayerScores sc =
-      [ translate x (fst ys) $ scale 0.2 0.2 $ color orange (text (snd ys))
+      [ translate x (fst ys) $ scale 0.2 0.2 $ color orange $ text $ snd ys
       | x <- [200]
       , ys <- zip [0,-25 .. -225] (map scoreToPlayerScore sc)
       ]
+    drawWinScore = translate (-50) 150 $ scale 0.2 0.2 $ color red $ text $ "Score: " ++ show (score $ player world)
+    drawWinMessage = translate (-200) 200 $ scale 0.5 0.5 $ color red $ text "Winner winner!"
 
 drawPlayer :: Int -> Player -> Picture
 drawPlayer currentIteration Player {playerSpaceship = spaceship} =

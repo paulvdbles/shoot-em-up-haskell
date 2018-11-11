@@ -6,17 +6,17 @@ module Model where
 
 import           GHC.Generics
 import           Graphics.Gloss
-
+import           Data.Text
 -- the time a level may take
 levelTime :: Int
-levelTime = 100
+levelTime = 60
 
 data Spaceship = Spaceship
   { speed                        :: Int
   , health                       :: HealthPoints
   , weapons                      :: [Weapon]
   , spaceshipPositionInformation :: PositionInformation
-  , lastHitAtIteration     :: Int
+  , lastHitAtIteration           :: Int
   }
 
 data Player = Player
@@ -24,6 +24,7 @@ data Player = Player
   , score           :: ScorePoints
   , comboMultiplier :: Int
   , comboTime       :: Seconds
+  , username        :: IO (Maybe Text)
   }
 
 data Enemy = Enemy
@@ -48,10 +49,10 @@ data Item
             , powerUpLocation :: Coordinate }
 
 data Weapon = Weapon
-  { bullet          :: Bullet
-  , active          :: Bool
+  { bullet              :: Bullet
+  , active              :: Bool
   , lastShotAtIteration :: Int
-  , reloadTime      :: Int
+  , reloadTime          :: Int
   }
 
 data Bullet
@@ -72,9 +73,11 @@ data PositionInformation = PositionInformation
 
 data State
   = Menu
+  | AskForUsername
   | Playing
   | GameOver
   | GameWin
+  | Quitting
   deriving (Eq)
 
 type DamagePoints = Float

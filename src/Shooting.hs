@@ -37,7 +37,12 @@ determineBulletsPositionInformation playerSpaceship = PositionInformation locati
     playerLocation = location (spaceshipPositionInformation playerSpaceship)
 
 updateEnemiesForAllBullets :: World -> World
-updateEnemiesForAllBullets world = world{bullets = updatedBullets, enemies = updatedEnemies, player = (player world){score = score (player world) + updatedScore}}
+updateEnemiesForAllBullets world =
+  world
+    { bullets = updatedBullets
+    , enemies = updatedEnemies
+    , player = (player world) {score = score (player world) + updatedScore}
+    }
   where
     bullets' = bullets world
     enemies' = enemies world
@@ -46,19 +51,17 @@ updateEnemiesForAllBullets world = world{bullets = updatedBullets, enemies = upd
     updatedScore = updatePlayerScore updatedEnemies
 
 updatePlayerScore :: [Enemy] -> ScorePoints
-updatePlayerScore enemies =  score
-  where dead = filter enemyIsDead enemies
-        score = foldr (\e acc -> bounty e + acc) 0 dead
+updatePlayerScore enemies = score
+  where
+    dead = filter (\enemy -> health (enemySpaceship enemy) <= 0) enemies
+    score = foldr (\e acc -> bounty e + acc) 0 dead
 
-
-enemyIsDead :: Enemy -> Bool
-enemyIsDead enemy = health (enemySpaceship enemy) > 0
-
-updateHitEnemy :: [Bullet] -> World -> Enemy ->  Enemy
+updateHitEnemy :: [Bullet] -> World -> Enemy -> Enemy
 updateHitEnemy bullets world enemy
   | foldr (\b acc -> checkIfBulletHitsEnemy enemy b || acc) False bullets =
     enemy
-      { enemySpaceship = (enemySpaceship enemy) {lastHitAtIteration = iteration world, health = health (enemySpaceship enemy) - 10}
+      { enemySpaceship =
+          (enemySpaceship enemy) {lastHitAtIteration = iteration world, health = health (enemySpaceship enemy) - 10}
       }
   | otherwise = enemy
 
