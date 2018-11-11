@@ -46,7 +46,6 @@ library
     , gloss == 1.13.0.1
     , gloss-rendering == 1.13.0.2
     , aeson == 1.4.1.0
-    , linear == 1.20.8
     , bytestring
     , random
     , directory
@@ -65,7 +64,6 @@ executable shoot-em-up-haskell-exe
     , gloss == 1.13.0.1
     , gloss-rendering == 1.13.0.2
     , aeson == 1.4.1.0
-    , linear == 1.20.8
     , bytestring
     , random
     , directory

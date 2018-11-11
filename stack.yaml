@@ -44,7 +44,6 @@ extra-deps:
 - gloss-1.13.0.1
 - gloss-rendering-1.13.0.2
 - aeson-1.4.1.0
-- linear-1.20.8
 # Override default flag values for local packages and extra-deps
 # flags: {}
 
