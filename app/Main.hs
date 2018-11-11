@@ -38,4 +38,4 @@ main =
     initialState -- Initial state
     view -- View function
     input -- Event function
-    step -- Step function
+    Controller.step -- Step function

@@ -62,7 +62,8 @@ data Bullet
                 , hit                       :: Bool
                 , bulletPositionInformation :: PositionInformation
                 , vector                    :: (Float, Float)
-                , fromPlayer                :: Bool }
+                , fromPlayer                :: Bool
+                , step                      :: Float }
 
 data PositionInformation = PositionInformation
   { location    :: Coordinate

@@ -32,18 +32,21 @@ shootBulletFromEnemy player enemy
 
 shootAimedBulletToPlayer :: Enemy -> Player -> Bullet
 shootAimedBulletToPlayer enemy player =
-  StraightBullet
+  AimedBullet
     10
     False
-    (PositionInformation (Coordinate (x enemyLocation) (y enemyLocation - 55)) vector)
+    (PositionInformation (Coordinate (x enemyLocation) (y enemyLocation - 55)) playerLocation)
+    vector
     False
+    step
   where
     vector = bulletVector enemyLocation playerLocation
     enemyLocation = location (spaceshipPositionInformation (enemySpaceship enemy))
     playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
+    step = abs (x playerLocation - x enemyLocation) / 5 + abs (y playerLocation - y enemyLocation) / 5
 
-bulletVector :: Coordinate -> Coordinate -> Coordinate
-bulletVector source destination = Coordinate (x destination - x source) (y destination - y source)
+bulletVector :: Coordinate -> Coordinate -> (Float, Float)
+bulletVector source destination = (x destination - x source, y destination - y source)
 
 shootStraightBulletToPlayer :: Enemy -> Bullet
 shootStraightBulletToPlayer enemy =
