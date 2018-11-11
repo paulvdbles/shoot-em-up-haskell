@@ -10,7 +10,7 @@ view world
     return
       (pictures
          (drawPlayer (iteration world) (player world) :
-          drawHealth (player world) : drawTime : drawBullets world ++ drawEnemies world))
+          drawHealth (player world) : drawTime : drawScore : drawBullets world ++ drawEnemies world))
   | state world == Menu = do
     sc <- scores world
     return (pictures ([drawPaused, drawPressEnter] ++ drawPlayerNames sc ++ drawPlayerScores sc))
@@ -19,7 +19,8 @@ view world
     scoreToPlayerScore Score {playerScore = playerScore} = show playerScore
     drawPaused = translate (-220) 350 $ color red (text "Paused")
     drawPressEnter = translate (-210) 320 $ scale 0.2 0.2 $ color orange $ text "Press Enter to continue"
-    drawTime = translate 300 450 $ scale 0.2 0.2 $ color red $ text $ show $ iteration world `div` 60
+    drawTime = translate 300 450 $ scale 0.2 0.2 $ color red $ text $ show $ levelTime - (iteration world `div` 60)
+    drawScore = translate 300 420 $ scale 0.2 0.2 $ color red $ text $ show $ score (player world)
     drawPlayerNames sc =
       [ translate x (fst ys) $ scale 0.2 0.2 $ color orange (text (snd ys))
       | x <- [-220]

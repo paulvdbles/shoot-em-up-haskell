@@ -7,6 +7,10 @@ module Model where
 import           GHC.Generics
 import           Graphics.Gloss
 
+-- the time a level may take
+levelTime :: Int
+levelTime = 100
+
 data Spaceship = Spaceship
   { speed                        :: Int
   , health                       :: HealthPoints

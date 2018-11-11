@@ -21,7 +21,9 @@ step secs world
     checkIfPlayerPauses $
     checkIfPlayerShouldBeMoved $
     updateShootingEnemies $
-    checkIfPlayerShouldShoot $ removeDeadEnemies $ removeHitBullets $ updatePlayerForAllEnemyBullets $ updateEnemiesForAllBullets $ updateIteration world
+    checkIfPlayerShouldShoot $
+    removeDeadEnemies $
+    removeHitBullets $ updatePlayerForAllEnemyBullets $ updateEnemiesForAllBullets $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
 
 updateIteration :: World -> World
