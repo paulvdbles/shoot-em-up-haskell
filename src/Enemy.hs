@@ -86,3 +86,32 @@ checkIfBulletHitsPlayer player bullet =
     enemyUpperBound = y (location (spaceshipPositionInformation (playerSpaceship player))) + 40
     enemyLowerBound = y (location (spaceshipPositionInformation (playerSpaceship player))) - 40
     bulletIsFromEnemy = not (fromPlayer bullet)
+
+removeHitBullets :: World -> World
+removeHitBullets world = world {bullets = filter (not . hit) (bullets world)}
+
+removeDeadEnemies :: World -> World
+removeDeadEnemies world = world {enemies = filter (\enemy -> health (enemySpaceship enemy) > 0) (enemies world)}
+
+addEnemies :: World -> World
+addEnemies world =
+  world
+    {enemies = enemies world ++ addEnemy spawns (iteration world), level = Level (removeSpawn spawns (iteration world))}
+  where
+    spawns = getSpawns (level world)
+    getSpawns (Level xs) = xs
+
+addEnemy :: [Spawn] -> Time -> [Enemy]
+addEnemy xs currentTime = foldr addEnemy' [] xs
+  where
+    addEnemy' (Spawn (PlaceableEnemy e) spawnTime) acc
+      | currentTime >= spawnTime = e : acc
+      | otherwise = acc
+
+-- | remove a spawn from the spawnlist when its time to spawn has gone by
+removeSpawn :: [Spawn] -> Time -> [Spawn]
+removeSpawn xs currentTime = foldr removeSpawn' [] xs
+  where
+    removeSpawn' (Spawn x spawnTime) acc
+      | currentTime > spawnTime = acc
+      | otherwise = Spawn x spawnTime : acc

@@ -99,3 +99,8 @@ playerHitLevelBounds newLocation = leftBoundHit || rightBoundHit || lowerBoundHi
     rightBoundHit = (360 - 25) < x newLocation
     lowerBoundHit = (-480 + 40) > y newLocation
     upperBoundHit = (480 - 40) < y newLocation
+
+checkIfPlayerDied :: World -> World
+checkIfPlayerDied world
+  | health (playerSpaceship (player world)) <= 0 = world {state = GameDone}
+  | otherwise = world
