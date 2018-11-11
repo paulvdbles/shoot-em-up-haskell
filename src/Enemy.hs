@@ -9,7 +9,7 @@ shootBulletToPlayer enemy player
   | otherwise = shootStraightBulletToPlayer enemy player
 
 shootStraightBulletToPlayer :: Enemy -> Player -> Bullet
-shootStraightBulletToPlayer enemy player = StraightBullet 10 False (PositionInformation (Coordinate 0 0) (Coordinate 0 0)) False
+shootStraightBulletToPlayer enemy player = StraightBullet 10 False (PositionInformation (Coordinate enemyLocationX (enemyLocationY - 55)) (Coordinate 0 0)) False
   where enemyLocationX = x (location (spaceshipPositionInformation (enemySpaceship enemy)))
         enemyLocationY = y (location (spaceshipPositionInformation (enemySpaceship enemy)))
 shootAimedBulletToPlayer :: Enemy -> Player -> Bullet

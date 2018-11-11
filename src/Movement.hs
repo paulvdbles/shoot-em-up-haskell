@@ -41,11 +41,16 @@ updateBullets :: World -> World
 updateBullets world = world {bullets = map moveBulletToDestination (removeOldBullets (bullets world))}
 
 removeOldBullets :: [Bullet] -> [Bullet]
-removeOldBullets = filter bulletShouldBeKept
+removeOldBullets = filter (not . bulletIsOutsideBounds)
 
-bulletShouldBeKept :: Bullet -> Bool
-bulletShouldBeKept bullet =
-  y (location (bulletPositionInformation bullet)) <= y (destination (bulletPositionInformation bullet))
+bulletIsOutsideBounds :: Bullet -> Bool
+bulletIsOutsideBounds bullet = outsideLeftBound || outsideRightBound || outsideLowerBound || outsideUpperBound
+  where bulletLocation = location (bulletPositionInformation bullet)
+        outsideLeftBound = -360 > x bulletLocation
+        outsideRightBound = 360 < x bulletLocation
+        outsideLowerBound = -480 > y bulletLocation
+        outsideUpperBound = 480 < y bulletLocation
+
 
 determineBulletMovement :: Bullet -> Bullet
 determineBulletMovement bullet@StraightBullet {} = moveBulletToDestination bullet

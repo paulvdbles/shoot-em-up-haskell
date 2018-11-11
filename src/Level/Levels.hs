@@ -25,6 +25,12 @@ defaultSpaceShip x y =
   PlaceableSpaceship
     (Spaceship speedSlow (difficultyLevel 1) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)))
 
+
+mediumDifficultySpaceShip :: Float -> Float -> Placeable
+mediumDifficultySpaceShip x y =
+  PlaceableSpaceship
+    (Spaceship speedSlow (difficultyLevel 2) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)))
+
 {- OBSTACLES -}
 bonusPointsNormal :: ScorePoints
 bonusPointsNormal = 5
@@ -100,5 +106,6 @@ level =
     , Spawn (defaultSpaceShip 100 400) (seconds 2)
     , Spawn (defaultSpaceShip (-100) 200) (seconds 3)
     , Spawn (defaultSpaceShip 50 300) (seconds 4)
+    , Spawn (mediumDifficultySpaceShip 300 300) (seconds 4)
 --    , Spawn (strongWeapon 0 (-200)) (seconds 5)
     ]
