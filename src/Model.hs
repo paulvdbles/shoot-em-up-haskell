@@ -33,13 +33,6 @@ data Enemy = Enemy
   , shootEveryNthIteration :: Int
   }
 
-data Obstacle = Obstacle
-  { bonusPoints                 :: ScorePoints
-  , obstacleCollisionDamage     :: DamagePoints
-  , obstacleHealth              :: HealthPoints
-  , obstaclePositionInformation :: PositionInformation
-  }
-
 data Item
   = WeaponItem { weaponItem         :: Weapon
                , weaponItemLocation :: Coordinate }
@@ -91,7 +84,6 @@ type Seconds = Float
 data World = World
   { player    :: Player
   , enemies   :: [Enemy]
-  , obstacles :: [Obstacle]
   , bullets   :: [Bullet]
   , level     :: Level
   , camera    :: Camera
@@ -131,7 +123,6 @@ type Time = Int
 data Placeable
   = PlaceableEnemy Enemy
   | PlaceableItem Item
-  | PlaceableObstacle Obstacle
 
 data Coordinate = Coordinate
   { x :: Float
@@ -144,7 +135,6 @@ class Locatable a where
 data Images = Images
   { playerImage   :: Picture
   , enemyImage    :: Picture
-  , obstacleImage :: Picture
   }
 
 newtype Scores = Scores
