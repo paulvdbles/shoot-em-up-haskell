@@ -57,8 +57,8 @@ newScoreList world =
               (sortBy
                  (\(Score p1 s1) (Score p2 s2) ->
                     if s1 > s2
-                      then GT
-                      else LT)
+                      then LT
+                      else GT)
                  (Score playerName' playerScore' : sc))
 
 -- TODO check if we need to add extra LOC to go from GameOver/GameWin state to Menu or something
