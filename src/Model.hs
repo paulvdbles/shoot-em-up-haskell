@@ -25,7 +25,6 @@ data Player = Player
 
 data Enemy = Enemy
   { bounty                 :: ScorePoints
-  , enemyCollisionDamage   :: DamagePoints
   , enemySpaceship         :: Spaceship
   , aims                   :: Bool
   , shootEveryNthIteration :: Int

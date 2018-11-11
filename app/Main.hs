@@ -24,7 +24,7 @@ initialKeyboard = Keyboard False False False False False False False
 testEnemyPosition = PositionInformation (Coordinate 0 300) (Coordinate 0 (-200))
 
 enemy :: Enemy
-enemy = Enemy 10 10 (Spaceship 1 100 [gun] testEnemyPosition 0) False 0
+enemy = Enemy 10 (Spaceship 1 100 [gun] testEnemyPosition 0) False 0
 
 initialState :: World
 initialState = World initialPlayer  [] [] Level.Levels.startingLevel mockCamera initialKeyboard 0 AskForUsername readScoreFile
