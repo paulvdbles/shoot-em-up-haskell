@@ -62,8 +62,7 @@ data Bullet
   | AimedBullet { damage                    :: DamagePoints
                 , hit                       :: Bool
                 , bulletPositionInformation :: PositionInformation
-                , sendAtFrame               :: Int
-                , vector                    :: (Int, Int)
+                , vector                    :: (Float, Float)
                 , fromPlayer                :: Bool }
 
 data PositionInformation = PositionInformation

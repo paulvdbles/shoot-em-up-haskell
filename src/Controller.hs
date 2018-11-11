@@ -66,8 +66,6 @@ removeHitBullets world = world {bullets = filter (not . hit) (bullets world)}
 removeDeadEnemies :: World -> World
 removeDeadEnemies world = world {enemies = filter enemyIsDead (enemies world)}
 
-enemyIsDead :: Enemy -> Bool
-enemyIsDead enemy = health (enemySpaceship enemy) > 0
 
 addEnemies :: World -> World
 addEnemies world =
