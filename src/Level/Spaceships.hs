@@ -21,7 +21,7 @@ defaultEnemy x y =
     (Enemy bounty collisionDamage (Spaceship speedSlow (difficultyLevel 1) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0) aims shootEveryNthIteration)
   where bounty = 10
         collisionDamage = 10
-        aims = False
+        aims = True
         shootEveryNthIteration = 180
 
 mediumDifficultyEnemy :: Float -> Float -> Placeable

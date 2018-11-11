@@ -38,7 +38,24 @@ movePlayer player newCoordinate =
     updatedPositionInformation = (spaceshipPositionInformation (playerSpaceship player)) {location = newCoordinate}
 
 updateBullets :: World -> World
-updateBullets world = world {bullets = map moveBulletStraight (removeOldBullets (bullets world))}
+updateBullets world = world {bullets = map moveBullet (removeOldBullets (bullets world))}
+
+moveEnemies :: World -> World
+moveEnemies world = world{enemies = moved}
+  where moved = map moveEnemy (enemies world)
+
+moveEnemy :: Enemy -> Enemy
+moveEnemy enemy =
+  enemy
+    { enemySpaceship =
+        (enemySpaceship enemy)
+          { spaceshipPositionInformation =
+              (spaceshipPositionInformation (enemySpaceship enemy)) {location = newLocation}
+          }
+    }
+  where
+    currentLocation = location (spaceshipPositionInformation (enemySpaceship enemy))
+    newLocation = Coordinate (x currentLocation) (y currentLocation - 1)
 
 removeOldBullets :: [Bullet] -> [Bullet]
 removeOldBullets = filter (not . bulletIsOutsideBounds)
@@ -52,9 +69,9 @@ bulletIsOutsideBounds bullet = outsideLeftBound || outsideRightBound || outsideL
     outsideLowerBound = -480 > y bulletLocation
     outsideUpperBound = 480 < y bulletLocation
 
-determineBulletMovement :: Bullet -> Bullet
-determineBulletMovement bullet@StraightBullet {} = moveBulletStraight bullet
-determineBulletMovement bullet@AimedBullet {} = undefined
+moveBullet :: Bullet -> Bullet
+moveBullet bullet@StraightBullet {} = moveBulletStraight bullet
+moveBullet bullet@AimedBullet {}    = moveBulletAimed bullet
 
 moveBulletStraight :: Bullet -> Bullet
 moveBulletStraight bullet =
@@ -65,6 +82,14 @@ moveBulletStraight bullet =
     direction
       | fromPlayer bullet = 10
       | otherwise = -10
+
+moveBulletAimed :: Bullet -> Bullet
+moveBulletAimed bullet =
+  bullet {bulletPositionInformation = (bulletPositionInformation bullet) {location = newLocation}}
+  where
+    (xVector, yVector) = vector bullet
+    currentLocation = location (bulletPositionInformation bullet)
+    newLocation = Coordinate (x currentLocation + (xVector / step bullet)) (y currentLocation + (yVector / step bullet))
 
 playerHitLevelBounds :: Coordinate -> Bool
 playerHitLevelBounds newLocation = leftBoundHit || rightBoundHit || lowerBoundHit || upperBoundHit

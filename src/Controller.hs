@@ -17,6 +17,7 @@ step secs world
   | state world == Playing =
     return $
     addEnemies $
+    moveEnemies $
     updateBullets $
     checkIfPlayerPauses $
     checkIfPlayerShouldBeMoved $
