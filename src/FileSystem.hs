@@ -4,7 +4,7 @@ module FileSystem where
 import           Data.Aeson
 import qualified Data.ByteString.Lazy as BS
 import           Model
-import           System.Directory     (getTemporaryDirectory, renameFile)
+import           System.Directory     (getTemporaryDirectory, renameFile, copyFile)
 
 instance FromJSON Score
 instance ToJSON Score where
@@ -21,7 +21,9 @@ writeScoreFile s = do
   tmpDir <- getTemporaryDirectory
   let tmpFile = tmpDir ++ "/" ++ scoreFile
   BS.writeFile tmpFile (encode s)
-  renameFile tmpFile scoreFile
+  print tmpFile
+  print scoreFile
+  copyFile tmpFile scoreFile
 
 readScoreFile :: IO [Score]
 readScoreFile = do
