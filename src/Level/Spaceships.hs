@@ -48,7 +48,7 @@ defaultEnemy x y =
   PlaceableEnemy
     (Enemy
        bounty
-       (Spaceship speedSlow (difficultyLevel 2) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
+       (Spaceship speedSlow (difficultyLevel 2) weaponNormal (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
        aims
        shootEveryNthIteration
        (getStaticColor 0)
@@ -63,7 +63,7 @@ mediumDifficultyEnemy x y =
   PlaceableEnemy
     (Enemy
        bounty
-       (Spaceship speedSlow (difficultyLevel 3) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
+       (Spaceship speedSlow (difficultyLevel 3) weaponNormal (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
        aims
        shootEveryNthIteration
        (getStaticColor 1)

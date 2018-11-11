@@ -12,7 +12,7 @@ initialPlayerPosition = PositionInformation (Coordinate 0 (-200)) (Coordinate 0 
 
 gun = Weapon (StraightBullet 10 False initialPlayerPosition True) True 0 10
 
-initialSpaceship = Spaceship 1 100 [gun] initialPlayerPosition 0
+initialSpaceship = Spaceship 1 100 gun initialPlayerPosition 0
 
 initialPlayer = Player initialSpaceship 0 ""
 

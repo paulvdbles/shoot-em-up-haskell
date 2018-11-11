@@ -9,25 +9,24 @@ checkIfPlayerShouldShoot world
 
 shootBulletIfWeaponIsReloaded :: World -> World
 shootBulletIfWeaponIsReloaded world
-  | iteration' >= lastShotAtIteration weapon + reloadTime weapon = shootBulletFromPlayer world
+  | iteration' >= lastShotAtIteration weapon' + reloadTime weapon' = shootBulletFromPlayer world
   | otherwise = world
   where
     iteration' = iteration world
     playerSpaceship' = playerSpaceship (player world)
-    weapon = head (filter active (weapons playerSpaceship'))
+    weapon' = weapon playerSpaceship'
 
 shootBulletFromPlayer :: World -> World
 shootBulletFromPlayer world =
   world
-    { player = (player world) {playerSpaceship = (playerSpaceship (player world)) {weapons = updatedWeapons}}
+    { player = (player world) {playerSpaceship = (playerSpaceship (player world)) {weapon = updatedWeapon}}
     , bullets = updatedBullets
     }
   where
     playerSpaceship' = playerSpaceship (player world)
-    weapon = head (filter active (weapons playerSpaceship'))
     spawnLocation = determineBulletsPositionInformation playerSpaceship'
-    updatedBullets = (bullet weapon) {bulletPositionInformation = spawnLocation} : bullets world
-    updatedWeapons = weapon {lastShotAtIteration = iteration world} : filter (not . active) (weapons playerSpaceship')
+    updatedBullets = (bullet (weapon playerSpaceship')) {bulletPositionInformation = spawnLocation} : bullets world
+    updatedWeapon = (weapon playerSpaceship') {lastShotAtIteration = iteration world}
 
 determineBulletsPositionInformation :: Spaceship -> PositionInformation
 determineBulletsPositionInformation playerSpaceship = PositionInformation location' destination

@@ -12,18 +12,17 @@ updateShootingEnemies world = world {bullets = updatedBullets, enemies = updated
     updatedEnemies = shootingEnemies ++ notShootingEnemies
 
 updateShootIterationEnemy :: World -> Enemy -> Enemy
-updateShootIterationEnemy world enemy =
-  enemy {enemySpaceship = (enemySpaceship enemy) {weapons = activeWeapon : otherWeapons}}
+updateShootIterationEnemy world enemy = enemy {enemySpaceship = enemy' {weapon = activeWeapon}}
   where
-    activeWeapon = (head (filter active (weapons (enemySpaceship enemy)))) {lastShotAtIteration = iteration world}
-    otherWeapons = filter (not . active) (weapons (enemySpaceship enemy))
+    enemy' = enemySpaceship enemy
+    activeWeapon = (weapon enemy') {lastShotAtIteration = iteration world}
 
 determineIfEnemyShouldShoot :: Int -> Enemy -> Bool
 determineIfEnemyShouldShoot iteration enemy
   | (iteration - lastShot) >= shootEveryNthIteration enemy = True
   | otherwise = False
   where
-    lastShot = lastShotAtIteration (head (filter active (weapons (enemySpaceship enemy))))
+    lastShot = lastShotAtIteration (weapon (enemySpaceship enemy))
 
 shootBulletFromEnemy :: Player -> Enemy -> Bullet
 shootBulletFromEnemy player enemy

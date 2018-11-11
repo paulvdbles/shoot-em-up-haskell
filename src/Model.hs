@@ -12,7 +12,7 @@ levelTime = 60
 data Spaceship = Spaceship
   { speed                        :: Int
   , health                       :: HealthPoints
-  , weapons                      :: [Weapon]
+  , weapon                       :: Weapon
   , spaceshipPositionInformation :: PositionInformation
   , lastHitAtIteration           :: Int
   }
@@ -113,7 +113,8 @@ data Spawn =
 
 type Time = Int
 
-newtype Placeable = PlaceableEnemy Enemy
+newtype Placeable =
+  PlaceableEnemy Enemy
 
 data Coordinate = Coordinate
   { x :: Float
@@ -127,10 +128,6 @@ data Images = Images
   { playerImage :: Picture
   , enemyImage  :: Picture
   }
-
-newtype Scores = Scores
-  { unScore :: [Score]
-  } deriving (Show)
 
 -- [Score {playerName = "David", playerScore = 1100},Score {playerName = "Paul", playerScore = 1042},Score {playerName = "Dank Pronk", playerScore = 999},Score {playerName = "player4", playerScore = 0},Score {playerName = "player5", playerScore = 0},Score {playerName = "player6", playerScore = 0},Score {playerName = "player7", playerScore = 0},Score {playerName = "player8", playerScore = 0},Score {playerName = "player9", playerScore = 0},Score {playerName = "player10", playerScore = 0}]
 data Score = Score
