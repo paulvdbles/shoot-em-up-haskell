@@ -37,7 +37,7 @@ step secs world
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
 
--- | appends new score to the current list, only keep the top 10 and sort it by score
+-- | Appends new score to the current list, only keep the top 10 and sort it by score
 newScoreList :: World -> IO World
 newScoreList world = do
   sc <- scores world
@@ -71,7 +71,6 @@ checkIfPlayerPauses world
   | enterKey (keyboard world) && state world == AskForUsername = world {state = Playing}
   | otherwise = world
 
---  add an input window for the username
 checkIfLevelDone :: World -> World
 checkIfLevelDone world
   | levelTime - (iteration world `div` 60) <= 0 = world {state = GameDone}

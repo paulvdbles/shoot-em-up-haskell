@@ -44,6 +44,7 @@ shootAimedBulletToPlayer enemy player =
     playerLocation = location (spaceshipPositionInformation (playerSpaceship player))
     step = abs (x playerLocation - x enemyLocation) / 5 + abs (y playerLocation - y enemyLocation) / 5
 
+-- | Used to determine aimed bullet moving pattern
 bulletVector :: Coordinate -> Coordinate -> (Float, Float)
 bulletVector source destination = (x destination - x source, y destination - y source)
 
@@ -74,6 +75,7 @@ updateHitPlayer bullets world player
       }
   | otherwise = player
 
+-- | Check if bullet hits inside the
 checkIfBulletHitsPlayer :: Player -> Bullet -> Bool
 checkIfBulletHitsPlayer player bullet =
   (bulletXCoordinate >= enemyLeftBound && bulletXCoordinate <= enemyRightBound) &&

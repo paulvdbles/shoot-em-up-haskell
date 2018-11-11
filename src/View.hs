@@ -89,3 +89,7 @@ drawHealth :: Player -> Picture
 drawHealth player = translate (-360) 460 $ color red $ rectangleSolid health' 30
   where
     health' = health (playerSpaceship player) * 2
+
+colors :: [Color]
+colors = [red, blue, green]
+
