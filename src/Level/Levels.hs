@@ -107,5 +107,5 @@ level =
     , Spawn (defaultSpaceShip (-100) 200) (seconds 3)
     , Spawn (defaultSpaceShip 50 300) (seconds 4)
     , Spawn (mediumDifficultySpaceShip 300 300) (seconds 4)
---    , Spawn (strongWeapon 0 (-200)) (seconds 5)
+    , Spawn (strongWeapon 0 (-200)) (seconds 5)
     ]
