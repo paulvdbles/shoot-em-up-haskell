@@ -77,11 +77,12 @@ addEnemy xs currentTime = foldr addEnemy' [] xs
     addEnemy' (Spawn (PlaceableSpaceship e) spawnTime) acc
       | currentTime >= spawnTime = Enemy 10 10 e (-1) False : acc
       | otherwise = acc
+    addEnemy' (Spawn _ spawnTime) acc = acc
 
 -- remove a spawn from the spawnlist when its time has gone by
 removeSpawn :: [Spawn] -> Time -> [Spawn]
 removeSpawn xs currentTime = foldr removeSpawn' [] xs
   where
-    removeSpawn' (Spawn (PlaceableSpaceship e) spawnTime) acc
+    removeSpawn' (Spawn x spawnTime) acc
       | currentTime > spawnTime = acc
-      | otherwise = Spawn (PlaceableSpaceship e) spawnTime : acc
+      | otherwise = Spawn x spawnTime : acc
