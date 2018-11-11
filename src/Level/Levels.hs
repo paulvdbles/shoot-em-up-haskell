@@ -1,7 +1,6 @@
 module Level.Levels where
 
 import           Model
-import           Level.PowerUps
 import           Level.Spaceships
 import           Level.Weapons
 
@@ -15,5 +14,4 @@ startingLevel =
     , Spawn (defaultEnemy (-100) 200) (seconds 3)
     , Spawn (defaultEnemy 50 300) (seconds 4)
     , Spawn (mediumDifficultyEnemy 300 300) (seconds 4)
-    , Spawn (strongWeapon 0 (-200)) (seconds 5)
     ]

@@ -34,6 +34,3 @@ weaponStrongSlow = Weapon (StraightBullet weaponDamageStrong hasBulletHit initia
 
 weaponStrongFast :: Weapon
 weaponStrongFast = Weapon (StraightBullet weaponDamageStrong hasBulletHit initialPosition True) isWeaponActive 0 reloadTimeFast
-
-strongWeapon :: Float -> Float -> Placeable
-strongWeapon x y = PlaceableItem (WeaponItem weaponStrongSlow (Coordinate x y))

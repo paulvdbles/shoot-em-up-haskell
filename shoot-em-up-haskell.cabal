@@ -34,7 +34,6 @@ library
     , FileSystem
     , Enemy
     , Level.Levels
-    , Level.PowerUps
     , Level.Spaceships
     , Level.Weapons
   other-modules:

@@ -30,12 +30,6 @@ data Enemy = Enemy
   , shootEveryNthIteration :: Int
   }
 
-data Item
-  = WeaponItem { weaponItem         :: Weapon
-               , weaponItemLocation :: Coordinate }
-  | PowerUp { bonusHealth     :: HealthPoints
-            , powerUpLocation :: Coordinate }
-
 data Weapon = Weapon
   { bullet              :: Bullet
   , active              :: Bool
@@ -117,9 +111,7 @@ data Spawn =
 
 type Time = Int
 
-data Placeable
-  = PlaceableEnemy Enemy
-  | PlaceableItem Item
+newtype Placeable = PlaceableEnemy Enemy
 
 data Coordinate = Coordinate
   { x :: Float
