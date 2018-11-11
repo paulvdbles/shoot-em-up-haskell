@@ -1,6 +1,5 @@
 module Level.Levels where
 
-import           Level.Obstacles
 import           Level.PowerUps
 import           Level.Spaceships
 import           Level.Weapons
