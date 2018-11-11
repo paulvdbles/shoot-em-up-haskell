@@ -11,10 +11,10 @@ seconds n = n * 60
 
 level =
   Level
-    [ Spawn (defaultSpaceShip 0 300) (seconds 1)
-    , Spawn (defaultSpaceShip 100 400) (seconds 2)
-    , Spawn (defaultSpaceShip (-100) 200) (seconds 3)
-    , Spawn (defaultSpaceShip 50 300) (seconds 4)
-    , Spawn (mediumDifficultySpaceShip 300 300) (seconds 4)
+    [ Spawn (defaultEnemy 0 300) (seconds 1)
+    , Spawn (defaultEnemy 100 400) (seconds 2)
+    , Spawn (defaultEnemy (-100) 200) (seconds 3)
+    , Spawn (defaultEnemy 50 300) (seconds 4)
+    , Spawn (mediumDifficultyEnemy 300 300) (seconds 4)
     , Spawn (strongWeapon 0 (-200)) (seconds 5)
     ]

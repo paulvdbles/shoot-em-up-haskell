@@ -123,7 +123,7 @@ data Spawn =
 type Time = Int
 
 data Placeable
-  = PlaceableSpaceship Spaceship
+  = PlaceableEnemy Enemy
   | PlaceableItem Item
   | PlaceableObstacle Obstacle
 

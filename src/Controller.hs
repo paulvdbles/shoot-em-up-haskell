@@ -78,8 +78,8 @@ addEnemies world =
 addEnemy :: [Spawn] -> Time -> [Enemy]
 addEnemy xs currentTime = foldr addEnemy' [] xs
   where
-    addEnemy' (Spawn (PlaceableSpaceship e) spawnTime) acc
-      | currentTime >= spawnTime = Enemy 10 10 e False 180 : acc
+    addEnemy' (Spawn (PlaceableEnemy e) spawnTime) acc
+      | currentTime >= spawnTime = e : acc
       | otherwise = acc
     addEnemy' (Spawn _ spawnTime) acc = acc
 
