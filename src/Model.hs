@@ -28,6 +28,7 @@ data Enemy = Enemy
   , enemySpaceship         :: Spaceship
   , aims                   :: Bool
   , shootEveryNthIteration :: Int
+  , shipColor              :: IO Color
   }
 
 data Weapon = Weapon
@@ -122,8 +123,8 @@ class Locatable a where
   nextLocation :: a -> a
 
 data Images = Images
-  { playerImage   :: Picture
-  , enemyImage    :: Picture
+  { playerImage :: Picture
+  , enemyImage  :: Picture
   }
 
 newtype Scores = Scores

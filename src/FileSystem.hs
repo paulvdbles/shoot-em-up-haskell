@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+
 module FileSystem where
 
 import           Data.Aeson
@@ -7,6 +8,7 @@ import           Model
 import           System.Directory     (getTemporaryDirectory, renameFile, copyFile)
 
 instance FromJSON Score
+
 instance ToJSON Score where
   toEncoding = genericToEncoding defaultOptions
 

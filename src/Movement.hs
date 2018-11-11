@@ -41,8 +41,9 @@ updateBullets :: World -> World
 updateBullets world = world {bullets = map moveBullet (removeOldBullets (bullets world))}
 
 moveEnemies :: World -> World
-moveEnemies world = world{enemies = moved}
-  where moved = map moveEnemy (enemies world)
+moveEnemies world = world {enemies = moved}
+  where
+    moved = map moveEnemy (enemies world)
 
 moveEnemy :: Enemy -> Enemy
 moveEnemy enemy =

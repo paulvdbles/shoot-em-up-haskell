@@ -37,12 +37,12 @@ step secs world
 updateIteration :: World -> World
 updateIteration world = world {iteration = iteration world + 1}
 
--- appends new score to the current list, only keep the top 10 and sort it by score
+-- | appends new score to the current list, only keep the top 10 and sort it by score
 newScoreList :: World -> IO World
-newScoreList world =
-  do sc <- scores world
-     writeScoreFile (newScores sc)
-     return $ world {scores = return (newScores sc), state = checkState}
+newScoreList world = do
+  sc <- scores world
+  writeScoreFile (newScores sc)
+  return $ world {scores = return (newScores sc), state = checkState}
   where
     player' = player world
     playerName' = username player'
@@ -52,24 +52,23 @@ newScoreList world =
       | playerHealth <= 0 = GameOver
       | otherwise = GameWin
     newScores sc =
-            take
-              10
-              (sortBy
-                 (\(Score p1 s1) (Score p2 s2) ->
-                    if s1 > s2
-                      then LT
-                      else GT)
-                 (Score playerName' playerScore' : sc))
+      take
+        10
+        (sortBy
+           (\(Score p1 s1) (Score p2 s2) ->
+              if s1 > s2
+                then LT
+                else GT)
+           (Score playerName' playerScore' : sc))
 
--- TODO check if we need to add extra LOC to go from GameOver/GameWin state to Menu or something
 checkIfPlayerPauses :: World -> World
 checkIfPlayerPauses world
   | pauseKey (keyboard world) && state world == Playing = world {state = Menu}
   | enterKey (keyboard world) && state world == Menu = world {state = Playing}
   | enterKey (keyboard world) && state world == GameWin = world {state = Quitting}
   | enterKey (keyboard world) && state world == GameOver = world {state = Quitting}
-  | enterKey (keyboard world) && state world == AskForUsername = world {state = Playing} --  TODO add winner input box?
-  | enterKey (keyboard world) && state world == AskForUsername = world {state = Playing} --  TODO add winner input box?
+  | enterKey (keyboard world) && state world == AskForUsername = world {state = Playing}
+  | enterKey (keyboard world) && state world == AskForUsername = world {state = Playing}
   | otherwise = world
 
 --  add an input window for the username
@@ -129,7 +128,7 @@ addEnemy xs currentTime = foldr addEnemy' [] xs
       | currentTime >= spawnTime = e : acc
       | otherwise = acc
 
--- remove a spawn from the spawnlist when its time has gone by
+-- | remove a spawn from the spawnlist when its time to spawn has gone by
 removeSpawn :: [Spawn] -> Time -> [Spawn]
 removeSpawn xs currentTime = foldr removeSpawn' [] xs
   where

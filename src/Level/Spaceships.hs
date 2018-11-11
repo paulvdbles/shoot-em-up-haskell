@@ -1,7 +1,10 @@
 module Level.Spaceships where
 
-import           Model
+import           Graphics.Gloss
+import           Graphics.Gloss.Interface.Pure.Game
 import           Level.Weapons
+import           Model
+import           System.Random
 
 difficultyLevel :: Float -> HealthPoints
 difficultyLevel n = n * 10
@@ -15,18 +18,53 @@ speedNormal = 2
 speedFast :: Int
 speedFast = 3
 
+getColor :: IO Color
+getColor = do
+  n <- randomRIO (0, 13)
+  return $ getc n
+
+
+getc :: Int -> Color
+getc n
+  | n == 0 = black
+  | n == 1 = white
+  | n == 2 = red
+  | n == 3 = green
+  | n == 4 = blue
+  | n == 5 = yellow
+  | n == 6 = cyan
+  | n == 7 = magenta
+  | n == 8 = rose
+  | n == 9 = violet
+  | n == 10 = azure
+  | n == 11 = aquamarine
+  | n == 12 = chartreuse
+  | otherwise = orange
+
 defaultEnemy :: Float -> Float -> Placeable
 defaultEnemy x y =
   PlaceableEnemy
-    (Enemy bounty (Spaceship speedSlow (difficultyLevel 1) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0) aims shootEveryNthIteration)
-  where bounty = 10
-        aims = True
-        shootEveryNthIteration = 180
+    (Enemy
+       bounty
+       (Spaceship speedSlow (difficultyLevel 2) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
+       aims
+       shootEveryNthIteration
+       getColor)
+  where
+    bounty = 10
+    aims = True
+    shootEveryNthIteration = 180
 
 mediumDifficultyEnemy :: Float -> Float -> Placeable
 mediumDifficultyEnemy x y =
   PlaceableEnemy
-   (Enemy bounty (Spaceship speedSlow (difficultyLevel 2) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0) aims shootEveryNthIteration)
-  where bounty = 10
-        aims = False
-        shootEveryNthIteration = 120
+    (Enemy
+       bounty
+       (Spaceship speedSlow (difficultyLevel 3) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
+       aims
+       shootEveryNthIteration
+       getColor)
+  where
+    bounty = 10
+    aims = False
+    shootEveryNthIteration = 120
