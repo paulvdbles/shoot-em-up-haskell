@@ -2,6 +2,7 @@
 --   in response to time and user input
 module Controller where
 
+import           Enemy
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.IO.Game
 import           Model
@@ -19,7 +20,8 @@ step secs world
     updateBullets $
     checkIfPlayerPauses $
     checkIfPlayerShouldBeMoved $
-    checkIfPlayerShouldShoot $ removeDeadEnemies $ removeHitBullets $ updateEnemiesForAllBullets $ updateIteration world
+    updateShootingEnemies $
+    checkIfPlayerShouldShoot $ removeDeadEnemies $ removeHitBullets $ updatePlayerForAllEnemyBullets $ updateEnemiesForAllBullets $ updateIteration world
   | state world == Menu = return $ checkIfPlayerPauses world
 
 updateIteration :: World -> World
@@ -66,7 +68,9 @@ enemyIsDead :: Enemy -> Bool
 enemyIsDead enemy = health (enemySpaceship enemy) > 0
 
 addEnemies :: World -> World
-addEnemies world = world {enemies = enemies world ++ addEnemy spawns (iteration world), level = Level (removeSpawn spawns (iteration world))}
+addEnemies world =
+  world
+    {enemies = enemies world ++ addEnemy spawns (iteration world), level = Level (removeSpawn spawns (iteration world))}
   where
     spawns = getSpawns (level world)
     getSpawns (Level xs) = xs
@@ -75,7 +79,7 @@ addEnemy :: [Spawn] -> Time -> [Enemy]
 addEnemy xs currentTime = foldr addEnemy' [] xs
   where
     addEnemy' (Spawn (PlaceableSpaceship e) spawnTime) acc
-      | currentTime >= spawnTime = Enemy 10 10 e (-1) False : acc
+      | currentTime >= spawnTime = Enemy 10 10 e False 180 : acc
       | otherwise = acc
 
 -- remove a spawn from the spawnlist when its time has gone by

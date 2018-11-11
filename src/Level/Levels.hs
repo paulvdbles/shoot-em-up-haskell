@@ -8,7 +8,7 @@ seconds :: Time -> Time
 seconds n = n * 60
 
 {- SPACESHIPS -}
-difficultyLevel :: Int -> HealthPoints
+difficultyLevel :: Float -> HealthPoints
 difficultyLevel n = n * 10
 
 speedSlow :: Int
@@ -23,13 +23,13 @@ speedFast = 3
 defaultSpaceShip :: Float -> Float -> Placeable
 defaultSpaceShip x y =
   PlaceableSpaceship
-    (Spaceship speedSlow (difficultyLevel 1) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)))
+    (Spaceship speedSlow (difficultyLevel 1) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
 
 
 mediumDifficultySpaceShip :: Float -> Float -> Placeable
 mediumDifficultySpaceShip x y =
   PlaceableSpaceship
-    (Spaceship speedSlow (difficultyLevel 2) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)))
+    (Spaceship speedSlow (difficultyLevel 2) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
 
 {- OBSTACLES -}
 bonusPointsNormal :: ScorePoints
@@ -67,10 +67,10 @@ defaultPowerUp x y = PlaceableItem (PowerUp puBonusHealthNormal (Coordinate x y)
 
 {- WEAPONS -}
 -- also used in SpaceShips
-weaponDamageNormal :: Int
+weaponDamageNormal :: Float
 weaponDamageNormal = 10
 
-weaponDamageStrong :: Int
+weaponDamageStrong :: Float
 weaponDamageStrong = 25
 
 hasBulletHit :: Bool

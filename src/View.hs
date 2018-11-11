@@ -6,7 +6,11 @@ import           Model
 
 view :: World -> IO Picture
 view world
-  | state world == Playing = return (pictures (drawPlayer (player world) : drawBullets world ++ drawEnemies world))
+  | state world == Playing =
+    return
+      (pictures
+         (drawPlayer (iteration world) (player world) :
+          drawHealth (player world) : drawBullets world ++ drawEnemies world))
   | state world == Menu = do
     sc <- scores world
     print $ show (iteration world)
@@ -27,11 +31,14 @@ view world
       , ys <- zip [0,-25 .. -225] (map scoreToPlayerScore sc)
       ]
 
-drawPlayer :: Player -> Picture
-drawPlayer Player {playerSpaceship = spaceship} =
-  translate (x playerPosition) (y playerPosition) $ color (light blue) $ rectangleSolid 50 80
+drawPlayer :: Int -> Player -> Picture
+drawPlayer currentIteration Player {playerSpaceship = spaceship} =
+  translate (x playerPosition) (y playerPosition) $ playerColour $ rectangleSolid 50 80
   where
     playerPosition = location (spaceshipPositionInformation spaceship)
+    playerColour = if lastHitAtIteration spaceship > currentIteration - 5
+                              then color red -- make the enemy red for a few iterations
+                              else color (light blue)
 
 drawBullets :: World -> [Picture]
 drawBullets world = map drawBullet (bullets world)
@@ -44,9 +51,13 @@ drawBullet bullet = translate (x bulletPosition) (y bulletPosition) $ color whit
 drawEnemies :: World -> [Picture]
 drawEnemies world = map (drawEnemy (iteration world)) (enemies world)
 
-drawEnemy ::Int -> Enemy -> Picture
+drawEnemy :: Int -> Enemy -> Picture
 drawEnemy currentIteration enemy = translate (x enemyPosition) (y enemyPosition) $ enemyColour $ rectangleSolid 40 40
   where enemyPosition = location (spaceshipPositionInformation (enemySpaceship enemy))
-        enemyColour = if lastHitAtIteration enemy > currentIteration - 5
+        enemyColour = if lastHitAtIteration (enemySpaceship enemy) > currentIteration - 5
                           then color red -- make the enemy red for a few iterations
                           else color azure
+
+drawHealth :: Player -> Picture
+drawHealth player = translate (-360) 460 $ color red $ rectangleSolid health' 30
+  where health' = health(playerSpaceship player)* 2

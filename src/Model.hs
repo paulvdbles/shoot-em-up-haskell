@@ -12,6 +12,7 @@ data Spaceship = Spaceship
   , health                       :: HealthPoints
   , weapons                      :: [Weapon]
   , spaceshipPositionInformation :: PositionInformation
+  , lastHitAtIteration     :: Int
   }
 
 data Player = Player
@@ -22,11 +23,11 @@ data Player = Player
   }
 
 data Enemy = Enemy
-  { bounty               :: ScorePoints
-  , enemyCollisionDamage :: DamagePoints
-  , enemySpaceship       :: Spaceship
-  , lastHitAtIteration   :: Int
-  , aims                 :: Bool
+  { bounty                 :: ScorePoints
+  , enemyCollisionDamage   :: DamagePoints
+  , enemySpaceship         :: Spaceship
+  , aims                   :: Bool
+  , shootEveryNthIteration :: Int
   }
 
 data Obstacle = Obstacle
@@ -45,7 +46,7 @@ data Item
 data Weapon = Weapon
   { bullet          :: Bullet
   , active          :: Bool
-  , lastShotAtFrame :: Int
+  , lastShotAtIteration :: Int
   , reloadTime      :: Int
   }
 
@@ -73,13 +74,13 @@ data State
   | GameWin
   deriving (Eq)
 
-type DamagePoints = Int
+type DamagePoints = Float
 
-type HealthPoints = Int
+type HealthPoints = Float
 
-type ScorePoints = Int
+type ScorePoints = Float
 
-type Seconds = Int
+type Seconds = Float
 
 data World = World
   { player    :: Player

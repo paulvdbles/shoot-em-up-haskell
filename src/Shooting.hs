@@ -9,15 +9,15 @@ checkIfPlayerShouldShoot world
 
 shootBulletIfWeaponIsReloaded :: World -> World
 shootBulletIfWeaponIsReloaded world
-  | iteration' >= lastShotAtFrame weapon + reloadTime weapon = shootBullet world
+  | iteration' >= lastShotAtIteration weapon + reloadTime weapon = shootBulletFromPlayer world
   | otherwise = world
   where
     iteration' = iteration world
     playerSpaceship' = playerSpaceship (player world)
     weapon = head (filter active (weapons playerSpaceship'))
 
-shootBullet :: World -> World
-shootBullet world =
+shootBulletFromPlayer :: World -> World
+shootBulletFromPlayer world =
   world
     { player = (player world) {playerSpaceship = (playerSpaceship (player world)) {weapons = updatedWeapons}}
     , bullets = updatedBullets
@@ -27,7 +27,7 @@ shootBullet world =
     weapon = head (filter active (weapons playerSpaceship'))
     spawnLocation = determineBulletsPositionInformation playerSpaceship'
     updatedBullets = (bullet weapon) {bulletPositionInformation = spawnLocation} : bullets world
-    updatedWeapons = weapon {lastShotAtFrame = iteration world} : filter (not . active) (weapons playerSpaceship')
+    updatedWeapons = weapon {lastShotAtIteration = iteration world} : filter (not . active) (weapons playerSpaceship')
 
 determineBulletsPositionInformation :: Spaceship -> PositionInformation
 determineBulletsPositionInformation playerSpaceship = PositionInformation location' destination
@@ -48,8 +48,7 @@ updateHitEnemy :: [Bullet] -> World -> Enemy ->  Enemy
 updateHitEnemy bullets world enemy
   | foldr (\b acc -> checkIfBulletHitsEnemy enemy b || acc) False bullets =
     enemy
-      { lastHitAtIteration = iteration world
-      , enemySpaceship = (enemySpaceship enemy) {health = health (enemySpaceship enemy) - 10}
+      { enemySpaceship = (enemySpaceship enemy) {lastHitAtIteration = iteration world, health = health (enemySpaceship enemy) - 10}
       }
   | otherwise = enemy
 

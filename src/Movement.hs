@@ -38,31 +38,30 @@ movePlayer player newCoordinate =
     updatedPositionInformation = (spaceshipPositionInformation (playerSpaceship player)) {location = newCoordinate}
 
 updateBullets :: World -> World
-updateBullets world = world {bullets = map moveBulletToDestination (removeOldBullets (bullets world))}
+updateBullets world = world {bullets = map moveBulletStraight (removeOldBullets (bullets world))}
 
 removeOldBullets :: [Bullet] -> [Bullet]
 removeOldBullets = filter (not . bulletIsOutsideBounds)
 
 bulletIsOutsideBounds :: Bullet -> Bool
 bulletIsOutsideBounds bullet = outsideLeftBound || outsideRightBound || outsideLowerBound || outsideUpperBound
-  where bulletLocation = location (bulletPositionInformation bullet)
-        outsideLeftBound = -360 > x bulletLocation
-        outsideRightBound = 360 < x bulletLocation
-        outsideLowerBound = -480 > y bulletLocation
-        outsideUpperBound = 480 < y bulletLocation
-
+  where
+    bulletLocation = location (bulletPositionInformation bullet)
+    outsideLeftBound = -360 > x bulletLocation
+    outsideRightBound = 360 < x bulletLocation
+    outsideLowerBound = -480 > y bulletLocation
+    outsideUpperBound = 480 < y bulletLocation
 
 determineBulletMovement :: Bullet -> Bullet
-determineBulletMovement bullet@StraightBullet {} = moveBulletToDestination bullet
+determineBulletMovement bullet@StraightBullet {} = moveBulletStraight bullet
 determineBulletMovement bullet@AimedBullet {} = undefined
 
-moveBulletToDestination :: Bullet -> Bullet
-moveBulletToDestination bullet = bullet {bulletPositionInformation = updatedPositionInformation}
+moveBulletStraight :: Bullet -> Bullet
+moveBulletStraight bullet =
+  bullet {bulletPositionInformation = (bulletPositionInformation bullet) {location = newLocation}}
   where
     currentLocation = location (bulletPositionInformation bullet)
     newLocation = Coordinate (x currentLocation) (y currentLocation + direction)
-    destination' = destination (bulletPositionInformation bullet)
-    updatedPositionInformation = PositionInformation newLocation destination'
     direction
       | fromPlayer bullet = 10
       | otherwise = -10
