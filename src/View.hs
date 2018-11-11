@@ -74,15 +74,16 @@ drawEnemies world = map (drawEnemy (iteration world)) (enemies world)
 
 drawEnemy :: Int -> Enemy -> IO Picture
 drawEnemy currentIteration enemy = do
-  sc2 <- shipColor enemy :: IO Color
-  return $ translate (x enemyPosition) (y enemyPosition) $ enemyColour sc2 $ rectangleSolid 40 40
+  sc <- shipColor enemy :: IO Color
+  shc <- shipHitColor enemy :: IO Color
+  return $ translate (x enemyPosition) (y enemyPosition) $ enemyColour sc shc $ rectangleSolid 40 40
   where
     enemyPosition = location (spaceshipPositionInformation (enemySpaceship enemy))
-    enemyColour :: Color -> Picture -> Picture
-    enemyColour sc2 =
+    enemyColour :: Color -> Color -> Picture -> Picture
+    enemyColour sc shc =
       if lastHitAtIteration (enemySpaceship enemy) > currentIteration - 5
-        then color sc2
-        else color azure -- make the enemy red for a few iterations
+        then color shc
+        else color sc -- make the enemy red for a few iterations
 
 drawHealth :: Player -> Picture
 drawHealth player = translate (-360) 460 $ color red $ rectangleSolid health' 30

@@ -23,20 +23,22 @@ getColor = do
   n <- randomRIO (0, 13)
   return $ getc n
 
+getStaticColor :: Int -> IO Color
+getStaticColor n
+  | n == 0 = return azure
+  | otherwise = return green
 
 getc :: Int -> Color
 getc n
   | n == 0 = black
   | n == 1 = white
   | n == 2 = red
-  | n == 3 = green
   | n == 4 = blue
   | n == 5 = yellow
   | n == 6 = cyan
   | n == 7 = magenta
   | n == 8 = rose
   | n == 9 = violet
-  | n == 10 = azure
   | n == 11 = aquamarine
   | n == 12 = chartreuse
   | otherwise = orange
@@ -49,6 +51,7 @@ defaultEnemy x y =
        (Spaceship speedSlow (difficultyLevel 2) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
        aims
        shootEveryNthIteration
+       (getStaticColor 0)
        getColor)
   where
     bounty = 10
@@ -63,6 +66,7 @@ mediumDifficultyEnemy x y =
        (Spaceship speedSlow (difficultyLevel 3) [weaponNormal] (PositionInformation (Coordinate x y) (Coordinate 0 0)) 0)
        aims
        shootEveryNthIteration
+       (getStaticColor 1)
        getColor)
   where
     bounty = 10

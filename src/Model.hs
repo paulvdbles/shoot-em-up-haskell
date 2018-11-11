@@ -29,6 +29,7 @@ data Enemy = Enemy
   , aims                   :: Bool
   , shootEveryNthIteration :: Int
   , shipColor              :: IO Color
+  , shipHitColor           :: IO Color
   }
 
 data Weapon = Weapon
