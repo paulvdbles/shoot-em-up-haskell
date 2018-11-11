@@ -1,19 +1,6 @@
 # shoot-em-up-haskell
 
-# IDE and the likes:
-
-IntelliJ IDEA with the following plugins:
-
-* IntelliJ-Haskell
-
-
-## Installation guide for IntelliJ-Haskell
-Install the **beta** version of IntelliJ-Haskell plugin:
-
-Add this to Plugins > Browse repositories > Manage Repositories:  
-https://plugins.jetbrains.com/plugins/alpha/8258
-
-Now install/update IntelliJ-Haskell
+<img src="https://i.imgur.com/ByElTY2.png" alt="Screenshot"
 
 # Building the project with Stack
 
