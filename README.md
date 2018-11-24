@@ -1,20 +1,13 @@
 # shoot-em-up-haskell
 
-<img src="https://i.imgur.com/ByElTY2.png" alt="Screenshot">
+Game built for the functional programming course at Utrecht University. Graded with a 8.57/10
 
 # Building the project with Stack
 
-*In the upper right of your screen:*  
-Edit Configurations > + > Haskell Stack > Haskell Stack Runner
-
-Give the config a name and enable `single instance` if you care.
-
-Click OK to close the screen.
-
-Now you're free to click the green play button to run the project 
+`stack build --install-ghc`
+`stack exec shoot-em-up-haskell`
 
 # Building the project with Cabal
-Execute:
 
 `cabal install --only-dependencies`  
 `cabal build`
