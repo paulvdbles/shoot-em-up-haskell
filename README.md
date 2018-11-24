@@ -4,7 +4,7 @@ Game built for the functional programming course at Utrecht University. Graded w
 
 # Building the project with Stack
 
-`stack build --install-ghc`
+`stack build --install-ghc`  
 `stack exec shoot-em-up-haskell`
 
 # Building the project with Cabal
